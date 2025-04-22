@@ -1,0 +1,61 @@
+import javax.swing.*;
+import java.awt.*;
+
+public class GamePanel extends JPanel implements Runnable {
+
+    KeyHandler KeyH = new KeyHandler();
+    public int FPS = 60;
+
+
+    public GamePanel(){
+        super();
+        this.setPreferredSize(new Dimension(1024, 762));
+        this.addKeyListener(KeyH);
+        this.setFocusable(true);
+    }
+
+    public void paintComponent(Graphics g){
+        super.paintComponent(g); // nie wiem czemu bez tego nie dziala
+        Graphics2D g2D = (Graphics2D)g;
+        g2D.drawImage(Main.ship.shipIcon.getImage(), Main.ship.pos_x, Main.ship.pos_y,Main.ship.width,Main.ship.height, this);
+        //g2D.dispose();
+    }
+
+
+    Thread GameThread;
+
+    public void startGameThread(){
+        GameThread = new Thread(this);
+        GameThread.start(); // starts the run() method
+    }
+
+    public void update(){
+        if(KeyH.leftPressed){
+            Main.ship.pos_x -= Main.ship.speed;
+            System.out.println("pressed a");
+        }
+        if(KeyH.rightPressed){
+            Main.ship.pos_x += Main.ship.speed;
+            System.out.println("pressed d");
+        }
+    }
+
+    @Override
+    public void run() {
+        while(GameThread != null){
+            //1. update() updates the information
+            update();
+            //2. repaint() built in java method to re-invoke paint() method
+            repaint();
+
+            try{
+                //noinspection BusyWait
+                Thread.sleep(1000L/FPS);
+            }
+            catch (InterruptedException e){
+                System.out.println("interrupted");
+            }
+        }
+    }
+
+}
