@@ -5,13 +5,18 @@ public class GamePanel extends JPanel implements Runnable {
 
     KeyHandler KeyH = new KeyHandler();
     public int FPS = 60;
-
+    public int bullet_pos_x1 = Main.ship.pos_x + 35;
+    public int bullet_pos_y1 = Main.ship.pos_y + 35;
+    public int bullet_pos_x2 = Main.ship.pos_x - 35;
+    public int bullet_pos_y2 = Main.ship.pos_y + 40;
+    public int bullet_speed = 10;
 
     public GamePanel(){
         super();
         this.setPreferredSize(new Dimension(1024, 762));
         this.addKeyListener(KeyH);
         this.setFocusable(true);
+        this.setBackground(Color.black);
     }
 
     public void paintComponent(Graphics g){
@@ -19,6 +24,8 @@ public class GamePanel extends JPanel implements Runnable {
         Graphics2D g2D = (Graphics2D)g;
         g2D.drawImage(Main.ship.shipIcon.getImage(), Main.ship.pos_x, Main.ship.pos_y,Main.ship.width,Main.ship.height, this);
         //g2D.dispose();
+        g2D.setPaint(Color.white);
+        g2D.drawLine(bullet_pos_x1, bullet_pos_y1, bullet_pos_x2, bullet_pos_y2);
     }
 
 
@@ -30,11 +37,11 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void update(){
-        if(KeyH.leftPressed){
+        if(KeyH.leftPressed && Main.ship.pos_x > -10){
             Main.ship.pos_x -= Main.ship.speed;
             System.out.println("pressed a");
         }
-        if(KeyH.rightPressed){
+        if(KeyH.rightPressed && Main.ship.pos_x < 1024-70){
             Main.ship.pos_x += Main.ship.speed;
             System.out.println("pressed d");
         }

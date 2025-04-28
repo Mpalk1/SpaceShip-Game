@@ -5,6 +5,7 @@ public class KeyHandler implements KeyListener {
 
     public boolean leftPressed;
     public boolean rightPressed;
+    public boolean enterPressed;
 
     @Override
     public void keyTyped(KeyEvent e) {
@@ -15,11 +16,13 @@ public class KeyHandler implements KeyListener {
     public void keyPressed(KeyEvent e) {
         if(e.getKeyCode() == KeyEvent.VK_A){
             leftPressed = true;
-
         }
         if(e.getKeyCode() == KeyEvent.VK_D){
             rightPressed = true;
-
+        }
+        if(e.getKeyCode() == 10){
+            enterPressed = true;
+            System.out.println("enter pressed: " + enterPressed);
         }
     }
 
