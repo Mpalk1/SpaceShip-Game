@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.awt.*;
 
 
 public class Main {
@@ -14,8 +15,12 @@ public class Main {
         window.setLocationRelativeTo(null);
 
         GamePanel gamePanel = new GamePanel();
+        TextField tutorial = new TextField("wasd - move, enter - shoot");
+        gamePanel.add(tutorial);
+
 
         window.add(gamePanel);
+        window.pack();
         gamePanel.startGameThread();
         window.setVisible(true);
     }

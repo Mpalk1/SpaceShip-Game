@@ -12,6 +12,8 @@ public class GamePanel extends JPanel implements Runnable {
     public int bullet_pos_y2 = Main.ship.pos_y + 40;
     public int bullet_speed = 10;
     public ArrayList<Bullet> bullets = new ArrayList<>();
+    public long StartTime = System.currentTimeMillis();
+    public long PassedTime = System.currentTimeMillis() - StartTime;
 
     public GamePanel(){
         super();
@@ -26,8 +28,7 @@ public class GamePanel extends JPanel implements Runnable {
         Graphics2D g2D = (Graphics2D)g;
         g2D.drawImage(Main.ship.shipIcon.getImage(), Main.ship.pos_x, Main.ship.pos_y,Main.ship.width,Main.ship.height, this);
         //g2D.dispose();
-        g2D.setPaint(Color.white);
-        g2D.drawLine(bullet_pos_x1, bullet_pos_y1, bullet_pos_x2, bullet_pos_y2);
+        g2D.setPaint(Color.RED);
         if(!bullets.isEmpty()){
             for(Bullet bullet: bullets){
                 g2D.fillRect(bullet.pos_x, bullet.pos_y, 20, 20);
@@ -48,12 +49,24 @@ public class GamePanel extends JPanel implements Runnable {
             Main.ship.pos_x -= Main.ship.speed;
             System.out.println("pressed a");
         }
-        if(KeyH.rightPressed && Main.ship.pos_x < 1024-70){
+        if(KeyH.rightPressed && Main.ship.pos_x < 1024-63){
             Main.ship.pos_x += Main.ship.speed;
             System.out.println("pressed d");
         }
+        if(KeyH.downPressed && Main.ship.pos_y < 762-70){
+            Main.ship.pos_y += Main.ship.speed;
+            System.out.println("pressed d");
+        }
+        if(KeyH.upPressed && Main.ship.pos_y > 0){
+            Main.ship.pos_y -= Main.ship.speed;
+            System.out.println("pressed d");
+        }
         if(KeyH.enterPressed){
-            bullets.add(new Bullet(Main.ship.pos_x + 25, Main.ship.pos_y));
+            if(System.currentTimeMillis() - StartTime > 200){
+                StartTime = System.currentTimeMillis();
+                bullets.add(new Bullet(Main.ship.pos_x + 25, Main.ship.pos_y));
+            }
+
         }
         if(!bullets.isEmpty()){
             for(Bullet bullet: bullets){
