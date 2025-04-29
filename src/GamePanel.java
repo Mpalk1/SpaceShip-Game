@@ -1,18 +1,26 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 
 public class GamePanel extends JPanel implements Runnable {
 
     KeyHandler KeyH = new KeyHandler();
+    MouseHandler MouseH = new MouseHandler();
     public int FPS = 60;
     public ArrayList<Bullet> bullets = new ArrayList<>();
     public long StartTime = System.currentTimeMillis();
+    public double angle_temp_x;
+    public double angle_temp_y;
+    public double angle_tan;
+    public double angle;
+
 
     public GamePanel(){
         super();
         this.setPreferredSize(new Dimension(1024, 762));
         this.addKeyListener(KeyH);
+        this.addMouseMotionListener(MouseH);
         this.setFocusable(true);
         this.setBackground(Color.black);
     }
@@ -20,8 +28,11 @@ public class GamePanel extends JPanel implements Runnable {
     public void paintComponent(Graphics g){
         super.paintComponent(g); // nie wiem czemu bez tego nie dziala
         Graphics2D g2D = (Graphics2D)g;
-        g2D.drawImage(Main.ship.shipIcon.getImage(), Main.ship.pos_x, Main.ship.pos_y,Main.ship.width,Main.ship.height, this);
+        AffineTransform startingTransform = g2D.getTransform();
+        g2D.rotate(angle, Main.ship.ship_center_x, Main.ship.ship_center_y); //jakies gowno tu sie dzieje
+        g2D.drawImage(Main.ship.shipIcon.getImage(), Main.ship.pos_x, Main.ship.pos_y,Main.ship.width,Main.ship.height, null);
         //g2D.dispose();
+        //g2D.setTransform(startingTransform);
         g2D.setPaint(Color.RED);
         if(!bullets.isEmpty()){
             for(Bullet bullet: bullets){
@@ -39,6 +50,14 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void update(){
+        int ship_center_x = Main.ship.pos_x + (Main.ship.width/2);
+        int ship_center_y = Main.ship.pos_y+ (Main.ship.height/2);
+        //ship angle calculations
+        angle_temp_x = MouseH.pos_x - Main.ship.ship_center_x;
+        angle_temp_y = MouseH.pos_y - Main.ship.ship_center_x;
+        angle = Math.atan2(angle_temp_x, angle_temp_y);
+        System.out.println("x: " + angle_temp_x + ", y: " + angle_temp_y + ", angle: " + angle);
+        //input handling
         if(KeyH.leftPressed && Main.ship.pos_x > -10){
             Main.ship.pos_x -= Main.ship.speed;
             System.out.println("pressed a");
@@ -70,7 +89,8 @@ public class GamePanel extends JPanel implements Runnable {
                 bullet.pos_y -= bullet.speed;
             }
         }
-        // TODO: ADD A COOLDOWN FOR SHOOTING
+
+
     }
 
     @Override
