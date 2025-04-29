@@ -6,14 +6,8 @@ public class GamePanel extends JPanel implements Runnable {
 
     KeyHandler KeyH = new KeyHandler();
     public int FPS = 60;
-    public int bullet_pos_x1 = Main.ship.pos_x + 35;
-    public int bullet_pos_y1 = Main.ship.pos_y + 35;
-    public int bullet_pos_x2 = Main.ship.pos_x - 35;
-    public int bullet_pos_y2 = Main.ship.pos_y + 40;
-    public int bullet_speed = 10;
     public ArrayList<Bullet> bullets = new ArrayList<>();
     public long StartTime = System.currentTimeMillis();
-    public long PassedTime = System.currentTimeMillis() - StartTime;
 
     public GamePanel(){
         super();
