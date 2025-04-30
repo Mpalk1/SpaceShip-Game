@@ -13,10 +13,8 @@ public class Main {
         window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         window.setResizable(false);
         window.setLocationRelativeTo(null);
-
+        //window.setLayout(null);
         GamePanel gamePanel = new GamePanel();
-        TextField tutorial = new TextField("wasd - move, enter - shoot");
-        gamePanel.add(tutorial);
 
 
         window.add(gamePanel);
