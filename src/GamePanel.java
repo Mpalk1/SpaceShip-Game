@@ -29,7 +29,7 @@ public class GamePanel extends JPanel implements Runnable {
         super.paintComponent(g); // nie wiem czemu bez tego nie dziala
         Graphics2D g2D = (Graphics2D)g;
         AffineTransform startingTransform = g2D.getTransform();
-        g2D.rotate(angle, Main.ship.ship_center_x, Main.ship.ship_center_y); //jakies gowno tu sie dzieje
+        g2D.rotate(angle, Main.ship.pos_x, Main.ship.pos_y); //jakies gowno tu sie dzieje
         g2D.drawImage(Main.ship.shipIcon.getImage(), Main.ship.pos_x, Main.ship.pos_y,Main.ship.width,Main.ship.height, null);
         //g2D.dispose();
         //g2D.setTransform(startingTransform);
@@ -39,6 +39,7 @@ public class GamePanel extends JPanel implements Runnable {
                 g2D.fillRect(bullet.pos_x, bullet.pos_y, 20, 20);
             }
         }
+        g2D.setTransform(startingTransform);
     }
 
 
@@ -54,8 +55,8 @@ public class GamePanel extends JPanel implements Runnable {
         int ship_center_y = Main.ship.pos_y+ (Main.ship.height/2);
         //ship angle calculations
         angle_temp_x = MouseH.pos_x - Main.ship.ship_center_x;
-        angle_temp_y = MouseH.pos_y - Main.ship.ship_center_x;
-        angle = Math.atan2(angle_temp_x, angle_temp_y);
+        angle_temp_y = MouseH.pos_y - Main.ship.ship_center_y;
+        angle = Math.atan2(angle_temp_y, angle_temp_x) - Math.PI / 2;
         System.out.println("x: " + angle_temp_x + ", y: " + angle_temp_y + ", angle: " + angle);
         //input handling
         if(KeyH.leftPressed && Main.ship.pos_x > -10){
