@@ -28,10 +28,6 @@ public class KeyHandler implements KeyListener {
         if(e.getKeyCode() == KeyEvent.VK_W){
             upPressed = true;
         }
-        if(e.getKeyCode() == 10){
-            enterPressed = true;
-            System.out.println("enter pressed: " + enterPressed);
-        }
 
     }
 
@@ -42,10 +38,6 @@ public class KeyHandler implements KeyListener {
         }
         if(e.getKeyChar() == 'd'){
             rightPressed = false;
-        }
-        if(e.getKeyCode() == 10){
-            enterPressed = false;
-            System.out.println("enter pressed: " + enterPressed);
         }
         if(e.getKeyCode() == KeyEvent.VK_S){
             downPressed= false;

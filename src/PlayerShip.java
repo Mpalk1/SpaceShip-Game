@@ -9,7 +9,7 @@ public class PlayerShip extends JPanel{
     int center_x;
     int center_y;
 
-//    public static int calculateShipAngleX(MouseHandler mH, PlayerShip ship){
+//    public static int calculateShipAngleX(MouseMotionHandler mH, PlayerShip ship){
 //        int temp_x = mH.pos_x;
 //
 //        return 0;
