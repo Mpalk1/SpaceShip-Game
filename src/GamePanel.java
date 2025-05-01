@@ -31,9 +31,9 @@ public class GamePanel extends JPanel implements Runnable {
         super.paintComponent(g); // nie wiem czemu bez tego nie dziala
         Graphics2D g2D = (Graphics2D)g;
         AffineTransform startingTransform = g2D.getTransform();
-        g2D.rotate(angle, Main.ship.pos_x, Main.ship.pos_y); //jakies gowno tu sie dzieje
+        g2D.rotate(angle, Main.ship.center_x, Main.ship.center_y); //jakies gowno tu sie dzieje
         //g2D.rotate(Math.PI/4, Main.ship.pos_x, Main.ship.pos_y);
-        g2D.drawImage(Main.ship.shipIcon.getImage(), Main.ship.center_x, Main.ship.center_y,Main.ship.width,Main.ship.height, null);
+        g2D.drawImage(Main.ship.shipIcon.getImage(), Main.ship.pos_x, Main.ship.pos_y,Main.ship.width,Main.ship.height, null);
         g2D.setPaint(Color.RED);
         if(!bullets.isEmpty()){
             for(Bullet bullet: bullets){
@@ -58,7 +58,7 @@ public class GamePanel extends JPanel implements Runnable {
         if(MouseH.pos_x > Main.ship.center_x && MouseH.pos_y < Main.ship.center_y){ // 1 cwiartka
             angle_temp_x = MouseH.pos_x - Main.ship.center_x;
             angle_temp_y = Main.ship.center_y - MouseH.pos_y;
-            angle = Math.atan2(angle_temp_y, angle_temp_x);
+            angle = Math.atan2(angle_temp_x, angle_temp_y);
         }
         if(MouseH.pos_x > Main.ship.center_x && MouseH.pos_y > Main.ship.center_y){ // 2 cwiartka
             System.out.println(Main.ship.center_x);
@@ -70,7 +70,7 @@ public class GamePanel extends JPanel implements Runnable {
         if(MouseH.pos_x < Main.ship.center_x && MouseH.pos_y > Main.ship.center_y){ // 3 cwiartka
             angle_temp_x = Main.ship.center_x - MouseH.pos_x;
             angle_temp_y = MouseH.pos_y - Main.ship.center_y;
-            angle = Math.atan2(angle_temp_y, angle_temp_x) + Math.PI;
+            angle = Math.atan2(angle_temp_x, angle_temp_y) + Math.PI;
         }
         if(MouseH.pos_x < Main.ship.center_x && MouseH.pos_y < Main.ship.center_y){ //4 cwiartka
             angle_temp_x = Main.ship.center_x - MouseH.pos_x;
@@ -79,7 +79,8 @@ public class GamePanel extends JPanel implements Runnable {
         }
 
 
-        debugField1.setText("x: " + angle_temp_x + ", y: " + angle_temp_y + ", angle: " + Math.toDegrees(angle));
+        debugField1.setText("Mouse_x: " + angle_temp_x + ", Mouse_y: " + angle_temp_y + ", angle: " + Math.toDegrees(angle) + ", ship position: (" + Main.ship.pos_x + ", "
+                + Main.ship.pos_y +  "), ship center: (" + Main.ship.center_x + ", " + Main.ship.center_y + ")");
         //input handling
         if(KeyH.leftPressed && Main.ship.pos_x > -10){
             Main.ship.pos_x -= Main.ship.speed;
