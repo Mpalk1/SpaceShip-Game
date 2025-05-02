@@ -19,8 +19,8 @@ public class Bullet {
         this.pos_x = pos_x;
         this.pos_y = pos_y;
         this.rotation = rotation;
-        center_x = pos_x/2;
-        center_y = pos_y/2;
+        center_x = pos_x + width/2;
+        center_y = pos_y + height/2;
         this.vx = Math.cos(rotation) * speed;
         this.vy = Math.sin(rotation) * speed;
 

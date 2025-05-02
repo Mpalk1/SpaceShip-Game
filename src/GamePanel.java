@@ -33,6 +33,7 @@ public class GamePanel extends JPanel implements Runnable {
     public void paintComponent(Graphics g){
         super.paintComponent(g);
         Graphics2D g2D = (Graphics2D)g;
+
         g2D.drawImage(debugBullet.icon.getImage(), debugBullet.pos_x, debugBullet.pos_y, debugBullet.width, debugBullet.height, null);
         AffineTransform startingTransform = g2D.getTransform();
         g2D.rotate(angle, Main.ship.center_x, Main.ship.center_y);
@@ -42,10 +43,11 @@ public class GamePanel extends JPanel implements Runnable {
         if(!bullets.isEmpty()){
             for(Bullet bullet: bullets){
                 g2D.setTransform(startingTransform);
-                g2D.rotate(bullet.rotation, bullet.pos_x, bullet.pos_y);
-                //g2D.drawImage(bullet.icon.getImage(), bullet.pos_x, bullet.pos_y, bullet.width, bullet.height, null); // TODO naprawic strzelanie
+                g2D.rotate(bullet.rotation, bullet.center_x, bullet.center_y);
+                g2D.drawImage(bullet.icon.getImage(), bullet.pos_x, bullet.pos_y, bullet.width, bullet.height, null); // TODO naprawic strzelanie
                 g2D.setPaint(Color.blue);
-                g2D.fillRect(bullet.pos_x, bullet.pos_y, bullet.width, bullet.height);
+                //g2D.fillRect(bullet.pos_x, bullet.pos_y, bullet.width, bullet.height);
+                //g2D.fillOval(bullet.pos_x, bullet.pos_y, bullet.width, bullet.height);
             }
         }
         g2D.setTransform(startingTransform);
