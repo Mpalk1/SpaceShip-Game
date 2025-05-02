@@ -115,7 +115,7 @@ public class GamePanel extends JPanel implements Runnable {
         if(MouseClickH.mouseClicked){
             if(System.currentTimeMillis() - StartTime > 200){
                 StartTime = System.currentTimeMillis();
-                bullets.add(new Bullet(Main.ship.center_x-11, Main.ship.center_y-35, angle));
+                bullets.add(new Bullet(Main.ship.center_x-10, Main.ship.center_y, angle));
             }
 
         }

@@ -4,9 +4,9 @@ public class Bullet {
     ImageIcon icon = new ImageIcon("player_projectile.png");
     public int pos_x;
     public int pos_y;
-    public int speed = 10;
+    public int speed = 15;
     public int width = 20;
-    public int height = 20;
+    public int height = 30;
     public double rotation;
     public int center_x;
     public int center_y;
