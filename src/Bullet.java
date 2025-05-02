@@ -4,12 +4,14 @@ public class Bullet {
     ImageIcon icon = new ImageIcon("player_projectile.png");
     public int pos_x;
     public int pos_y;
-    public int speed = 5;
-    public int width = 50;
-    public int height = 50;
+    public int speed = 10;
+    public int width = 20;
+    public int height = 20;
     public double rotation;
     public int center_x;
     public int center_y;
+    public double vx;
+    public double vy;
 
 //    public Thread cooldown;
 
@@ -19,5 +21,8 @@ public class Bullet {
         this.rotation = rotation;
         center_x = pos_x/2;
         center_y = pos_y/2;
+        this.vx = Math.cos(rotation) * speed;
+        this.vy = Math.sin(rotation) * speed;
+
     }
 }

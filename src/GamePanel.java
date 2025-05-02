@@ -17,6 +17,7 @@ public class GamePanel extends JPanel implements Runnable {
     public double angle;
     public TextField debugField1 = new TextField();
     double bullet_angle;
+    Bullet debugBullet = new Bullet(0,0,0);
 
     public GamePanel(){
         super();
@@ -32,6 +33,7 @@ public class GamePanel extends JPanel implements Runnable {
     public void paintComponent(Graphics g){
         super.paintComponent(g);
         Graphics2D g2D = (Graphics2D)g;
+        g2D.drawImage(debugBullet.icon.getImage(), debugBullet.pos_x, debugBullet.pos_y, debugBullet.width, debugBullet.height, null);
         AffineTransform startingTransform = g2D.getTransform();
         g2D.rotate(angle, Main.ship.center_x, Main.ship.center_y);
         //g2D.rotate(Math.PI/4, Main.ship.pos_x, Main.ship.pos_y);
@@ -41,7 +43,9 @@ public class GamePanel extends JPanel implements Runnable {
             for(Bullet bullet: bullets){
                 g2D.setTransform(startingTransform);
                 g2D.rotate(bullet.rotation, bullet.pos_x, bullet.pos_y);
-                g2D.drawImage(bullet.icon.getImage(), bullet.pos_x, bullet.pos_y, bullet.width, bullet.height, null); // TODO naprawic strzelanie
+                //g2D.drawImage(bullet.icon.getImage(), bullet.pos_x, bullet.pos_y, bullet.width, bullet.height, null); // TODO naprawic strzelanie
+                g2D.setPaint(Color.blue);
+                g2D.fillRect(bullet.pos_x, bullet.pos_y, bullet.width, bullet.height);
             }
         }
         g2D.setTransform(startingTransform);
@@ -109,7 +113,7 @@ public class GamePanel extends JPanel implements Runnable {
         if(MouseClickH.mouseClicked){
             if(System.currentTimeMillis() - StartTime > 200){
                 StartTime = System.currentTimeMillis();
-                bullets.add(new Bullet(Main.ship.center_x, Main.ship.center_y-35, angle));
+                bullets.add(new Bullet(Main.ship.center_x-11, Main.ship.center_y-35, angle));
             }
 
         }
@@ -118,9 +122,11 @@ public class GamePanel extends JPanel implements Runnable {
         if(!bullets.isEmpty()) {
             for (Bullet bullet : bullets) {
                 if (bullet.pos_y > 762 /*|| bullet.pos_y < 0*/) {
-                    bullets.remove(bullet);
+                    //bullets.remove(bullet);
                     System.out.println("bullet removed");
                 }
+                //bullet.pos_x += (int) bullet.vx;
+                //bullet.pos_y -= (int) bullet.vy;
                 bullet.pos_y -= bullet.speed;
 //                switch(bullet.direction){
 //                    case 1:
