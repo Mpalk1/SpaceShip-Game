@@ -11,10 +11,10 @@ public class Bullet {
     public double rotation;
     public int center_x;
     public int center_y;
-    public double vx;
-    public double vy;
     public Rectangle HitBox;
     public int hits;
+    public int relative_x;
+    public int relative_y;
 
 //    public Thread cooldown;
 
@@ -24,15 +24,15 @@ public class Bullet {
         this.rotation = rotation;
         center_x = pos_x + width/2;
         center_y = pos_y + height/2;
-        this.vx = Math.cos(rotation) * speed;
-        this.vy = Math.sin(rotation) * speed;
-        this.HitBox = new Rectangle(this.pos_x, this.pos_y, this.width, this.height);
+        this.HitBox = new Rectangle(this.relative_x, this.pos_y, this.width, this.height);
         this.hits = 0;
+        this.relative_x = pos_x;
+        this.relative_y = pos_y;
 
     }
 
     public void updateHitBox(){
-        this.HitBox.setLocation(this.pos_x, this.pos_y);
+        this.HitBox.setLocation(this.relative_x, this.pos_y);
     }
 
 }

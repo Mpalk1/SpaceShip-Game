@@ -24,4 +24,5 @@ public class Enemy {
         this.HP = HP;
     }
 
+
 }

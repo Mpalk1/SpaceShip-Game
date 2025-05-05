@@ -18,8 +18,9 @@ public class GamePanel extends JPanel implements Runnable {
     public double angle_temp_x;
     public double angle_temp_y;
     public double angle;
+    public double angle_temp;
     public TextField debugField1 = new TextField();
-    Enemy Enemy1 = new Enemy(50, 50, 64, 45, 100);
+    Enemy Enemy1 = new Enemy(500, 500, 64, 45, 100);
 
     public GamePanel(){
         super();
@@ -49,7 +50,6 @@ public class GamePanel extends JPanel implements Runnable {
                     g2D.setTransform(startingTransform);
                     g2D.rotate(bullet.rotation, bullet.center_x, bullet.center_y);
                     g2D.drawImage(bullet.icon.getImage(), bullet.pos_x, bullet.pos_y, bullet.width, bullet.height, null);
-                    g2D.setPaint(Color.blue);
                 }
             }
         }
@@ -79,23 +79,27 @@ public class GamePanel extends JPanel implements Runnable {
         if(MouseMotionH.pos_x > Main.ship.center_x && MouseMotionH.pos_y < Main.ship.center_y){ // 1 cwiartka
             angle_temp_x = MouseMotionH.pos_x - Main.ship.center_x;
             angle_temp_y = Main.ship.center_y - MouseMotionH.pos_y;
+            angle_temp = Math.atan2(angle_temp_x, angle_temp_y);
             angle = Math.atan2(angle_temp_x, angle_temp_y);
         }
         if(MouseMotionH.pos_x > Main.ship.center_x && MouseMotionH.pos_y > Main.ship.center_y){ // 2 cwiartka
             angle_temp_x = MouseMotionH.pos_x - Main.ship.center_x;
             angle_temp_y = MouseMotionH.pos_y - Main.ship.center_y;
+            angle_temp = Math.atan2(angle_temp_x, angle_temp_y);
             angle = Math.atan2(angle_temp_y, angle_temp_x) + Math.PI/2;
 
         }
         if(MouseMotionH.pos_x < Main.ship.center_x && MouseMotionH.pos_y > Main.ship.center_y){ // 3 cwiartka
             angle_temp_x = Main.ship.center_x - MouseMotionH.pos_x;
             angle_temp_y = MouseMotionH.pos_y - Main.ship.center_y;
+            angle_temp = Math.atan2(angle_temp_x, angle_temp_y);
             angle = Math.atan2(angle_temp_x, angle_temp_y) + Math.PI;
 
         }
         if(MouseMotionH.pos_x < Main.ship.center_x && MouseMotionH.pos_y < Main.ship.center_y){ //4 cwiartka
             angle_temp_x = Main.ship.center_x - MouseMotionH.pos_x;
             angle_temp_y = Main.ship.center_y - MouseMotionH.pos_y;
+            angle_temp = Math.atan2(angle_temp_x, angle_temp_y);
             angle = Math.atan2(angle_temp_y, angle_temp_x) + 3*Math.PI/2;
 
         }
@@ -140,7 +144,7 @@ public class GamePanel extends JPanel implements Runnable {
                 System.out.println(bullet.HitBox);
 
                 //Checking for hits
-                if(bullet.hits == 0) {
+                if (bullet.hits == 0) {
                     if (bullet.HitBox.intersects(Enemy1.HurtBox)) {
                         Enemy1.HP -= 25;
                         System.out.println("enemy hit");
