@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.awt.*;
 
 public class Bullet {
     ImageIcon icon = new ImageIcon("player_projectile.png");
@@ -12,6 +13,8 @@ public class Bullet {
     public int center_y;
     public double vx;
     public double vy;
+    public Rectangle HitBox;
+    public int hits;
 
 //    public Thread cooldown;
 
@@ -23,6 +26,13 @@ public class Bullet {
         center_y = pos_y + height/2;
         this.vx = Math.cos(rotation) * speed;
         this.vy = Math.sin(rotation) * speed;
+        this.HitBox = new Rectangle(this.pos_x, this.pos_y, this.width, this.height);
+        this.hits = 0;
 
     }
+
+    public void updateHitBox(){
+        this.HitBox.setLocation(this.pos_x, this.pos_y);
+    }
+
 }
