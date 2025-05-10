@@ -49,7 +49,7 @@ public class GamePanel extends JPanel implements Runnable {
                 if (bullet.hits == 0) {
                     g2D.setTransform(startingTransform);
                     g2D.rotate(bullet.rotation, bullet.center_x, bullet.center_y);
-                    g2D.drawImage(bullet.icon.getImage(), bullet.pos_x, bullet.pos_y, bullet.width, bullet.height, null);
+                    g2D.drawImage(bullet.icon.getImage(), (int)bullet.pos_x, (int)bullet.pos_y, bullet.width, bullet.height, null);
                 }
             }
         }
@@ -133,15 +133,21 @@ public class GamePanel extends JPanel implements Runnable {
 
         if(!bullets.isEmpty()) {
             for (Bullet bullet : bullets) {
-                if (bullet.pos_y > 762){
+                bullet.updateCenterX();
+                bullet.updateCenterY();
+                if (bullet.center_y > SCREEN_HEIGHT || bullet.center_x < 0){
                     //bullets.remove(bullet);
                     System.out.println("bullet removed");
                 }
 
                 //Shooting
-                bullet.pos_y -= bullet.speed;
+//                bullet.pos_y -= bullet.speed;
+                bullet.pos_x += Math.cos(bullet.rotation-Math.PI/2) * bullet.speed;
+                bullet.pos_y += Math.sin(bullet.rotation-Math.PI/2) * bullet.speed;
+
+
                 bullet.updateHitBox();
-                System.out.println(bullet.HitBox);
+                //System.out.println(bullet.HitBox);
 
                 //Checking for hits
                 if (bullet.hits == 0) {

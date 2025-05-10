@@ -3,18 +3,18 @@ import java.awt.*;
 
 public class Bullet {
     ImageIcon icon = new ImageIcon("player_projectile.png");
-    public int pos_x;
-    public int pos_y;
+    public double pos_x;
+    public double pos_y;
     public int speed = 15;
     public int width = 20;
     public int height = 30;
     public double rotation;
-    public int center_x;
-    public int center_y;
+    public double center_x;
+    public double center_y;
     public Rectangle HitBox;
     public int hits;
-    public int relative_x;
-    public int relative_y;
+//    public int relative_x;
+//    public int relative_y;
 
 //    public Thread cooldown;
 
@@ -24,15 +24,22 @@ public class Bullet {
         this.rotation = rotation;
         center_x = pos_x + width/2;
         center_y = pos_y + height/2;
-        this.HitBox = new Rectangle(this.relative_x, this.pos_y, this.width, this.height);
+        this.HitBox = new Rectangle((int)this.pos_x, (int)this.pos_y, this.width, this.height);
         this.hits = 0;
-        this.relative_x = pos_x;
-        this.relative_y = pos_y;
+//        this.relative_x = pos_x;
+//        this.relative_y = pos_y;
 
     }
 
     public void updateHitBox(){
-        this.HitBox.setLocation(this.relative_x, this.pos_y);
+        this.HitBox.setLocation((int)this.pos_x, (int)this.pos_y);
+    }
+
+    public void updateCenterX(){
+        this.center_x = this.pos_x + this.width/2;
+    }
+    public void updateCenterY(){
+        this.center_y = this.pos_y + this.height/2;
     }
 
 }
