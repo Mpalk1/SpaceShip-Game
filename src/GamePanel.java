@@ -1,19 +1,20 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
-import java.util.ArrayList;
+import java.util.*;
+import java.util.List;
 
 public class GamePanel extends JPanel implements Runnable {
 
     // TODO dodać dzwięki
-    private final int SCREEN_WIDTH = 1024;
-    private final int SCREEN_HEIGHT = 762;
+    public static final int SCREEN_WIDTH = 1024;
+    public static final int SCREEN_HEIGHT = 762;
 
     KeyHandler KeyH = new KeyHandler();
     MouseMotionHandler MouseMotionH = new MouseMotionHandler();
     MouseClickHandler MouseClickH = new MouseClickHandler();
     public int FPS = 60;
-    public ArrayList<Bullet> bullets = new ArrayList<>(); // TODO change this to linked list
+    public final List<Bullet> bullets = Collections.synchronizedList(new ArrayList<>());
     public long StartTime = System.currentTimeMillis();
     public double angle_temp_x;
     public double angle_temp_y;
@@ -130,31 +131,32 @@ public class GamePanel extends JPanel implements Runnable {
             }
 
         }
+        synchronized (bullets) {
+            if(!bullets.isEmpty()) {
+                Iterator<Bullet> it = bullets.iterator();
+                while(it.hasNext()) {
+                    Bullet bullet = it.next();
+                    bullet.updateCenterX();
+                    bullet.updateCenterY();
+                    if (bullet.shouldRemove()) {
+                        it.remove();
+                        System.out.println("bullet removed");
+                    }
 
-        if(!bullets.isEmpty()) {
-            for (Bullet bullet : bullets) {
-                bullet.updateCenterX();
-                bullet.updateCenterY();
-                if (bullet.center_y > SCREEN_HEIGHT || bullet.center_x < 0){
-                    //bullets.remove(bullet);
-                    System.out.println("bullet removed");
-                }
-
-                //Shooting
-//                bullet.pos_y -= bullet.speed;
-                bullet.pos_x += Math.cos(bullet.rotation-Math.PI/2) * bullet.speed;
-                bullet.pos_y += Math.sin(bullet.rotation-Math.PI/2) * bullet.speed;
+                    //Shooting
+                    bullet.pos_x += Math.cos(bullet.rotation - Math.PI / 2) * bullet.speed;
+                    bullet.pos_y += Math.sin(bullet.rotation - Math.PI / 2) * bullet.speed;
 
 
-                bullet.updateHitBox();
-                //System.out.println(bullet.HitBox);
+                    bullet.updateHitBox();
 
-                //Checking for hits
-                if (bullet.hits == 0) {
-                    if (bullet.HitBox.intersects(Enemy1.HurtBox)) {
-                        Enemy1.HP -= 25;
-                        System.out.println("enemy hit");
-                        bullet.hits += 1;
+                    //Checking for hits
+                    if (bullet.hits == 0) {
+                        if (bullet.HitBox.intersects(Enemy1.HurtBox)) {
+                            Enemy1.HP -= 25;
+                            System.out.println("enemy hit");
+                            bullet.hits += 1;
+                        }
                     }
                 }
             }

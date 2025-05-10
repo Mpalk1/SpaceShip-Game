@@ -22,8 +22,8 @@ public class Bullet {
         this.pos_x = pos_x;
         this.pos_y = pos_y;
         this.rotation = rotation;
-        center_x = pos_x + width/2;
-        center_y = pos_y + height/2;
+        center_x = pos_x + (double) width /2;
+        center_y = pos_y + (double) height /2;
         this.HitBox = new Rectangle((int)this.pos_x, (int)this.pos_y, this.width, this.height);
         this.hits = 0;
 //        this.relative_x = pos_x;
@@ -36,10 +36,16 @@ public class Bullet {
     }
 
     public void updateCenterX(){
-        this.center_x = this.pos_x + this.width/2;
+        this.center_x = this.pos_x + (double) this.width /2;
     }
     public void updateCenterY(){
-        this.center_y = this.pos_y + this.height/2;
+        this.center_y = this.pos_y + (double) this.height /2;
     }
+
+    public boolean shouldRemove(){
+        return (this.center_y > GamePanel.SCREEN_HEIGHT || this.center_y < 0 || this.center_x < 0 || this.center_x > GamePanel.SCREEN_WIDTH);
+    }
+
+
 
 }
