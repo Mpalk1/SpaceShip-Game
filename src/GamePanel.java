@@ -11,19 +11,23 @@ public class GamePanel extends JPanel implements Runnable {
     private Thread GameThread;
     public static final int SCREEN_WIDTH = 1600;
     public static final int SCREEN_HEIGHT = 1000;
-    EnemyManager EnemyM = new EnemyManager();
-    KeyHandler KeyH = new KeyHandler();
-    MouseMotionHandler MouseMotionH = new MouseMotionHandler();
-    MouseClickHandler MouseClickH = new MouseClickHandler();
-    public int FPS = 60;
-    public final List<Bullet> bullets = Collections.synchronizedList(new ArrayList<>());
+
     public long StartTime = System.currentTimeMillis();
+    public int FPS = 60;
     public double angle_temp_x;
     public double angle_temp_y;
     public double angle;
     public double angle_temp;
-    public TextField debugField1 = new TextField();
+
+    EnemyManager EnemyM = new EnemyManager();
+    KeyHandler KeyH = new KeyHandler();
+    MouseMotionHandler MouseMotionH = new MouseMotionHandler();
+    MouseClickHandler MouseClickH = new MouseClickHandler();
+    public JLabel debugField1 = new JLabel();
     SoundManager SoundManager = new SoundManager();
+    public final List<Bullet> bullets = Collections.synchronizedList(new ArrayList<>());
+    JLabel score = new JLabel();
+    int score_cnt;
 
     public GamePanel() {
         super();
@@ -33,7 +37,9 @@ public class GamePanel extends JPanel implements Runnable {
         this.addMouseListener(MouseClickH);
         this.setFocusable(true);
         this.setBackground(Color.black);
+        this.setLayout(null);
         this.add(debugField1);
+        this.add(score);
     }
 
     @Override
@@ -81,11 +87,17 @@ public class GamePanel extends JPanel implements Runnable {
         for (int i = 0; i < 5; i++) {
             EnemyM.spawnEnemyRandom(100);
         }
+        score_cnt = 0;
+        debugField1.setBounds(SCREEN_WIDTH/2-250, 10, 1000, 10);
+        score.setFont(new Font("Tahoma", Font.PLAIN, 20));
+        score.setBounds(0,0,300,20);
+        score.setForeground(Color.red);
     }
 
     public void update() throws UnsupportedAudioFileException, LineUnavailableException, IOException {
         Main.ship.center_x = Main.ship.pos_x + (Main.ship.width / 2);
         Main.ship.center_y = Main.ship.pos_y + (Main.ship.height / 2);
+        score.setText("SCORE: " + score_cnt);
 
         //ship angle calculations
 
@@ -175,6 +187,7 @@ public class GamePanel extends JPanel implements Runnable {
                                 }
                                 if (enemy.HP <= 0) {
                                     it_enemies.remove();
+                                    score_cnt += 25;
                                 }
                             }
                         }
