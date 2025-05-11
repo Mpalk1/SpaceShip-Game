@@ -14,7 +14,7 @@ public class SoundManager {
         Clip Clip = AudioSystem.getClip();
         Clip.open(AudioStream);
         FloatControl volume = (FloatControl) Clip.getControl(FloatControl.Type.MASTER_GAIN);
-        volume.setValue(-15.0f);
+        volume.setValue(-20.0f);
         Clip.start();
         System.out.println("shooting sound playing");
     }
@@ -23,7 +23,7 @@ public class SoundManager {
         Clip Clip = AudioSystem.getClip();
         Clip.open(AudioStream);
         FloatControl volume = (FloatControl) Clip.getControl(FloatControl.Type.MASTER_GAIN);
-        volume.setValue(-15.0f);
+        volume.setValue(-20.0f);
         Clip.start();
     }
     public void playEnemyHit() throws UnsupportedAudioFileException, IOException, LineUnavailableException {
@@ -31,7 +31,7 @@ public class SoundManager {
         Clip Clip = AudioSystem.getClip();
         Clip.open(AudioStream);
         FloatControl volume = (FloatControl) Clip.getControl(FloatControl.Type.MASTER_GAIN);
-        volume.setValue(-15.0f);
+        volume.setValue(-20.0f);
         Clip.start();
     }
 }

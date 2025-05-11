@@ -1,10 +1,10 @@
 import javax.swing.*;
 public class PlayerShip extends JPanel{
-    ImageIcon shipIcon = new ImageIcon("assets/sprites/ship.png");
+    ImageIcon shipIcon = new ImageIcon("assets/sprites/Ship.png");
     int pos_x = 460;
     int pos_y = 600;
-    int width = 70;
-    int height = 70;
+    int width = 40;
+    int height = 40;
     int speed = 7;
     int center_x;
     int center_y;
