@@ -2,7 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Bullet {
-    ImageIcon icon = new ImageIcon("player_projectile.png");
+    ImageIcon icon = new ImageIcon("assets/sprites/player_projectile.png");
     public double pos_x;
     public double pos_y;
     public int speed = 15;

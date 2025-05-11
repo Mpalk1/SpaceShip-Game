@@ -3,6 +3,7 @@ import java.awt.event.MouseListener;
 
 public class MouseClickHandler implements MouseListener {
     public boolean mouseClicked = false;
+    public boolean shootingSound = false;
 
 
     @Override
@@ -12,12 +13,14 @@ public class MouseClickHandler implements MouseListener {
     @Override
     public void mousePressed(MouseEvent e) {
         mouseClicked = true;
-        System.out.println("clicked");
+        shootingSound = true;
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
         mouseClicked = false;
+        shootingSound = false;
+
     }
 
     @Override

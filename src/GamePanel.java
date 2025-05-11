@@ -1,8 +1,10 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
+import java.io.IOException;
 import java.util.*;
 import java.util.List;
+import javax.sound.sampled.*;
 
 public class GamePanel extends JPanel implements Runnable {
 
@@ -22,6 +24,7 @@ public class GamePanel extends JPanel implements Runnable {
     public double angle_temp;
     public TextField debugField1 = new TextField();
     Enemy Enemy1 = new Enemy(500, 500, 64, 45, 100);
+    SoundManager SoundManager = new SoundManager();
 
     public GamePanel(){
         super();
@@ -71,7 +74,7 @@ public class GamePanel extends JPanel implements Runnable {
         GameThread.start(); // starts the run() method
     }
 
-    public void update(){
+    public void update() throws UnsupportedAudioFileException, LineUnavailableException, IOException {
         Main.ship.center_x = Main.ship.pos_x + (Main.ship.width/2);
         Main.ship.center_y = Main.ship.pos_y + (Main.ship.height/2);
 
@@ -128,6 +131,7 @@ public class GamePanel extends JPanel implements Runnable {
             if(System.currentTimeMillis() - StartTime > 200){
                 StartTime = System.currentTimeMillis();
                 bullets.add(new Bullet(Main.ship.center_x-10, Main.ship.center_y, angle));
+                SoundManager.playShootingSound();
             }
 
         }
@@ -153,7 +157,8 @@ public class GamePanel extends JPanel implements Runnable {
                     //Checking for hits
                     if (bullet.hits == 0) {
                         if (bullet.HitBox.intersects(Enemy1.HurtBox)) {
-                            Enemy1.HP -= 25;
+                            //Enemy1.HP -= 25;
+                            SoundManager.playEnemyHit();
                             System.out.println("enemy hit");
                             bullet.hits += 1;
                         }
@@ -167,7 +172,11 @@ public class GamePanel extends JPanel implements Runnable {
     public void run() {
         while(GameThread != null){
             //1. update() updates the information
-            update();
+            try {
+                update();
+            } catch (UnsupportedAudioFileException | LineUnavailableException | IOException e) {
+                throw new RuntimeException(e);
+            }
             //2. repaint() built in java method to re-invoke paint() method
             repaint();
 

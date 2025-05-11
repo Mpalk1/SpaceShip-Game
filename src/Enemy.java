@@ -15,12 +15,12 @@ public class Enemy {
     public Enemy(int pos_x, int pos_y, int width, int height, int HP){
         this.pos_x = pos_x;
         this.pos_y = pos_y;
-        this.icon = new ImageIcon("enemy.png");
+        this.icon = new ImageIcon("assets/sprites/enemy.png");
         this.width = width;
         this.height = height;
         this.center_x = pos_x + width/2;
         this.center_y = pos_y + height/2;
-        this.HurtBox = new Rectangle(this.pos_x, this.pos_y, this.width, this.height);
+        this.HurtBox = new Rectangle(this.pos_x+10, this.pos_y+10, this.width/2, this.height/2);
         this.HP = HP;
     }
 
