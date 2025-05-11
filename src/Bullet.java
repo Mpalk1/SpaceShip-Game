@@ -5,7 +5,7 @@ public class Bullet {
     ImageIcon icon = new ImageIcon("assets/sprites/player_projectile.png");
     public double pos_x;
     public double pos_y;
-    public int speed = 15;
+    public int speed = 10;
     public int width = 20;
     public int height = 30;
     public double rotation;
@@ -26,9 +26,6 @@ public class Bullet {
         center_y = pos_y + (double) height /2;
         this.HitBox = new Rectangle((int)this.pos_x, (int)this.pos_y, this.width, this.height);
         this.hits = 0;
-//        this.relative_x = pos_x;
-//        this.relative_y = pos_y;
-
     }
 
     public void updateHitBox(){

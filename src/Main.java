@@ -1,5 +1,4 @@
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.*;;
 
 
 public class Main {
@@ -8,8 +7,8 @@ public class Main {
 
 
     public static void main(String[] args) {
-        JFrame window = new JFrame("Space Invaders Clone");
-        window.setSize(1024,762);
+        JFrame window = new JFrame("SpaceShip-Game");
+        window.setSize(GamePanel.SCREEN_WIDTH,GamePanel.SCREEN_HEIGHT);
         window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         window.setResizable(false);
         window.setLocationRelativeTo(null);

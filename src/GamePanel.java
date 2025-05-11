@@ -8,10 +8,10 @@ import javax.sound.sampled.*;
 
 public class GamePanel extends JPanel implements Runnable {
 
-    // TODO dodać dzwięki
-    public static final int SCREEN_WIDTH = 1024;
-    public static final int SCREEN_HEIGHT = 762;
-
+    private Thread GameThread;
+    public static final int SCREEN_WIDTH = 1600;
+    public static final int SCREEN_HEIGHT = 1000;
+    EnemyManager EnemyM = new EnemyManager();
     KeyHandler KeyH = new KeyHandler();
     MouseMotionHandler MouseMotionH = new MouseMotionHandler();
     MouseClickHandler MouseClickH = new MouseClickHandler();
@@ -23,7 +23,6 @@ public class GamePanel extends JPanel implements Runnable {
     public double angle;
     public double angle_temp;
     public TextField debugField1 = new TextField();
-    Enemy Enemy1 = new Enemy(500, 500, 40, 40, 100);
     SoundManager SoundManager = new SoundManager();
 
     public GamePanel() {
@@ -55,23 +54,33 @@ public class GamePanel extends JPanel implements Runnable {
                     g2D.setTransform(startingTransform);
                     g2D.rotate(bullet.rotation, bullet.center_x, bullet.center_y);
                     g2D.drawImage(bullet.icon.getImage(), (int) bullet.pos_x, (int) bullet.pos_y, bullet.width, bullet.height, null);
+                    g2D.drawRect(bullet.HitBox.x, bullet.HitBox.y, bullet.HitBox.width, bullet.HitBox.height);
                 }
             }
         }
         g2D.setTransform(startingTransform);
 
         //Drawing enemies
-        if (Enemy1.HP > 0) {
-            g2D.drawImage(Enemy1.icon.getImage(), Enemy1.pos_x, Enemy1.pos_y, Enemy1.width, Enemy1.height, null);
+        if (!EnemyM.enemies.isEmpty()) {
+            for (Enemy enemy : EnemyM.enemies) {
+                g2D.drawImage(enemy.icon.getImage(), enemy.pos_x, enemy.pos_y, null);
+                g2D.drawRect(enemy.HurtBox.x, enemy.HurtBox.y, enemy.HurtBox.width, enemy.HurtBox.height);
+            }
         }
     }
 
 
-    Thread GameThread;
-
     public void startGameThread() {
         GameThread = new Thread(this);
+        setup();
         GameThread.start(); // starts the run() method
+    }
+
+    public void setup() {
+        System.out.println("setup started");
+        for (int i = 0; i < 5; i++) {
+            EnemyM.spawnEnemyRandom(100);
+        }
     }
 
     public void update() throws UnsupportedAudioFileException, LineUnavailableException, IOException {
@@ -115,13 +124,13 @@ public class GamePanel extends JPanel implements Runnable {
 
         //input handling
 
-        if (KeyH.leftPressed && Main.ship.pos_x > -10) {
+        if (KeyH.leftPressed && Main.ship.pos_x > 0) {
             Main.ship.pos_x -= Main.ship.speed;
         }
-        if (KeyH.rightPressed && Main.ship.pos_x < 1024 - 63) {
+        if (KeyH.rightPressed && Main.ship.pos_x < SCREEN_WIDTH - Main.ship.width) {
             Main.ship.pos_x += Main.ship.speed;
         }
-        if (KeyH.downPressed && Main.ship.pos_y < 762 - 70) {
+        if (KeyH.downPressed && Main.ship.pos_y < SCREEN_HEIGHT - Main.ship.height) {
             Main.ship.pos_y += Main.ship.speed;
         }
         if (KeyH.upPressed && Main.ship.pos_y > 0) {
@@ -137,30 +146,42 @@ public class GamePanel extends JPanel implements Runnable {
         }
         synchronized (bullets) {
             if (!bullets.isEmpty()) {
-                Iterator<Bullet> it = bullets.iterator();
-                while (it.hasNext()) {
-                    Bullet bullet = it.next();
+                Iterator<Bullet> it_bullets = bullets.iterator();
+                while (it_bullets.hasNext()) {
+                    Bullet bullet = it_bullets.next();
                     bullet.updateCenterX();
                     bullet.updateCenterY();
                     if (bullet.shouldRemove()) {
-                        it.remove();
+                        it_bullets.remove();
                         System.out.println("bullet removed");
                     }
 
                     //Shooting
                     bullet.pos_x += Math.cos(bullet.rotation - Math.PI / 2) * bullet.speed;
                     bullet.pos_y += Math.sin(bullet.rotation - Math.PI / 2) * bullet.speed;
-
-
                     bullet.updateHitBox();
 
                     //Checking for hits
-                    if (bullet.hits == 0) {
-                        if (bullet.HitBox.intersects(Enemy1.HurtBox)) {
-                            //Enemy1.HP -= 25;
-                            SoundManager.playEnemyHit();
-                            System.out.println("enemy hit");
-                            bullet.hits += 1;
+                    synchronized (EnemyM.enemies) {
+                        if (bullet.hits == 0) {
+                            Iterator<Enemy> it_enemies = EnemyM.enemies.iterator();
+                            while (it_enemies.hasNext()) {
+                                Enemy enemy = it_enemies.next();
+                                if (enemy.HurtBox.intersects(bullet.HitBox)) {
+                                    enemy.HP -= 25;
+                                    SoundManager.playEnemyHit();
+                                    System.out.println("enemy hit");
+                                    bullet.hits += 1;
+                                }
+                                if (enemy.HP <= 0) {
+                                    it_enemies.remove();
+                                }
+                            }
+                        }
+                        if (EnemyM.enemies.isEmpty()) {
+                            for (int i = 0; i < 5; i++) {
+                                EnemyM.spawnEnemyRandom(100);
+                            }
                         }
                     }
                 }
