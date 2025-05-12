@@ -8,16 +8,22 @@ import javax.sound.sampled.*;
 
 public class GamePanel extends JPanel implements Runnable {
 
+    // TODO: enemies walking towards player, enemies shooting at player - , colliding with enemies
+
     private Thread GameThread;
     public static final int SCREEN_WIDTH = 1600;
     public static final int SCREEN_HEIGHT = 1000;
 
     public long StartTime = System.currentTimeMillis();
+    long enemy_cooldown = System.currentTimeMillis();
     public int FPS = 60;
     public double angle_temp_x;
     public double angle_temp_y;
     public double angle;
     public double angle_temp;
+    double StartTimer;
+    int score_cnt;
+    int time_limit = 60;
 
     EnemyManager EnemyM = new EnemyManager();
     KeyHandler KeyH = new KeyHandler();
@@ -25,9 +31,10 @@ public class GamePanel extends JPanel implements Runnable {
     MouseClickHandler MouseClickH = new MouseClickHandler();
     public JLabel debugField1 = new JLabel();
     SoundManager SoundManager = new SoundManager();
-    public final List<Bullet> bullets = Collections.synchronizedList(new ArrayList<>());
+    public final List<Bullet> player_bullets = Collections.synchronizedList(new ArrayList<>());
     JLabel score = new JLabel();
-    int score_cnt;
+    JLabel timer = new JLabel();
+    //JOptionPane game_over_screen = new JOptionPane();
 
     public GamePanel() {
         super();
@@ -40,6 +47,7 @@ public class GamePanel extends JPanel implements Runnable {
         this.setLayout(null);
         this.add(debugField1);
         this.add(score);
+        this.add(timer);
     }
 
     @Override
@@ -54,13 +62,13 @@ public class GamePanel extends JPanel implements Runnable {
         g2D.setTransform(startingTransform);
 
         // Drawing bullets
-        if (!bullets.isEmpty()) {
-            for (Bullet bullet : bullets) {
+        if (!player_bullets.isEmpty()) {
+            for (Bullet bullet : player_bullets) {
                 if (bullet.hits == 0) {
                     g2D.setTransform(startingTransform);
                     g2D.rotate(bullet.rotation, bullet.center_x, bullet.center_y);
                     g2D.drawImage(bullet.icon.getImage(), (int) bullet.pos_x, (int) bullet.pos_y, bullet.width, bullet.height, null);
-                    g2D.drawRect(bullet.HitBox.x, bullet.HitBox.y, bullet.HitBox.width, bullet.HitBox.height);
+                    //g2D.drawRect(bullet.HitBox.x, bullet.HitBox.y, bullet.HitBox.width, bullet.HitBox.height);
                 }
             }
         }
@@ -69,10 +77,13 @@ public class GamePanel extends JPanel implements Runnable {
         //Drawing enemies
         if (!EnemyM.enemies.isEmpty()) {
             for (Enemy enemy : EnemyM.enemies) {
+                g2D.setTransform(startingTransform);
+                g2D.rotate(enemy.rotation, enemy.center_x, enemy.center_y);
                 g2D.drawImage(enemy.icon.getImage(), enemy.pos_x, enemy.pos_y, null);
-                g2D.drawRect(enemy.HurtBox.x, enemy.HurtBox.y, enemy.HurtBox.width, enemy.HurtBox.height);
+                //g2D.drawRect(enemy.HurtBox.x, enemy.HurtBox.y, enemy.HurtBox.width, enemy.HurtBox.height);
             }
         }
+        g2D.setTransform(startingTransform);
     }
 
 
@@ -84,49 +95,55 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void setup() {
         System.out.println("setup started");
+        JOptionPane.showMessageDialog(null, "Time limit: " + time_limit + "s.\nTry to get the highest score possible.", "rules", JOptionPane.PLAIN_MESSAGE);
         for (int i = 0; i < 5; i++) {
             EnemyM.spawnEnemyRandom(100);
         }
         score_cnt = 0;
-        debugField1.setBounds(SCREEN_WIDTH/2-250, 10, 1000, 10);
-        score.setFont(new Font("Tahoma", Font.PLAIN, 20));
-        score.setBounds(0,0,300,20);
+        StartTimer = System.currentTimeMillis();
+        debugField1.setBounds(SCREEN_WIDTH / 2 - 250, 10, 1000, 10);
+        score.setFont(new Font("Thoma", Font.PLAIN, 20));
+        score.setBounds(0, 0, 300, 20);
         score.setForeground(Color.red);
+        timer.setFont(new Font("Thoma", Font.PLAIN, 20));
+        timer.setBounds(0, 30, 300, 20);
+        timer.setForeground(Color.BLUE);
     }
 
     public void update() throws UnsupportedAudioFileException, LineUnavailableException, IOException {
         Main.ship.center_x = Main.ship.pos_x + (Main.ship.width / 2);
         Main.ship.center_y = Main.ship.pos_y + (Main.ship.height / 2);
+
+
         score.setText("SCORE: " + score_cnt);
+        timer.setText("TIME: " + (int) (System.currentTimeMillis() - StartTimer) / 1000);
+        if ((int) (System.currentTimeMillis() - StartTimer) / 1000 >= time_limit) {
+            GameThread = null;
+            JOptionPane.showMessageDialog(null, "Time limit exceeded.\nYour score: " + score_cnt, "game over", JOptionPane.PLAIN_MESSAGE);
+        }
+
 
         //ship angle calculations
 
         if (MouseMotionH.pos_x > Main.ship.center_x && MouseMotionH.pos_y < Main.ship.center_y) { // 1 cwiartka
             angle_temp_x = MouseMotionH.pos_x - Main.ship.center_x;
             angle_temp_y = Main.ship.center_y - MouseMotionH.pos_y;
-            angle_temp = Math.atan2(angle_temp_x, angle_temp_y);
             angle = Math.atan2(angle_temp_x, angle_temp_y);
         }
         if (MouseMotionH.pos_x > Main.ship.center_x && MouseMotionH.pos_y > Main.ship.center_y) { // 2 cwiartka
             angle_temp_x = MouseMotionH.pos_x - Main.ship.center_x;
             angle_temp_y = MouseMotionH.pos_y - Main.ship.center_y;
-            angle_temp = Math.atan2(angle_temp_x, angle_temp_y);
             angle = Math.atan2(angle_temp_y, angle_temp_x) + Math.PI / 2;
-
         }
         if (MouseMotionH.pos_x < Main.ship.center_x && MouseMotionH.pos_y > Main.ship.center_y) { // 3 cwiartka
             angle_temp_x = Main.ship.center_x - MouseMotionH.pos_x;
             angle_temp_y = MouseMotionH.pos_y - Main.ship.center_y;
-            angle_temp = Math.atan2(angle_temp_x, angle_temp_y);
             angle = Math.atan2(angle_temp_x, angle_temp_y) + Math.PI;
-
         }
         if (MouseMotionH.pos_x < Main.ship.center_x && MouseMotionH.pos_y < Main.ship.center_y) { //4 cwiartka
             angle_temp_x = Main.ship.center_x - MouseMotionH.pos_x;
             angle_temp_y = Main.ship.center_y - MouseMotionH.pos_y;
-            angle_temp = Math.atan2(angle_temp_x, angle_temp_y);
             angle = Math.atan2(angle_temp_y, angle_temp_x) + 3 * Math.PI / 2;
-
         }
 
 
@@ -151,14 +168,14 @@ public class GamePanel extends JPanel implements Runnable {
         if (MouseClickH.mouseClicked) {
             if (System.currentTimeMillis() - StartTime > 200) {
                 StartTime = System.currentTimeMillis();
-                bullets.add(new Bullet(Main.ship.center_x - 10, Main.ship.center_y, angle));
+                player_bullets.add(new Bullet(Main.ship.center_x - 10, Main.ship.center_y, angle));
                 SoundManager.playShootingSound();
             }
 
         }
-        synchronized (bullets) {
-            if (!bullets.isEmpty()) {
-                Iterator<Bullet> it_bullets = bullets.iterator();
+        synchronized (player_bullets) {
+            if (!player_bullets.isEmpty()) {
+                Iterator<Bullet> it_bullets = player_bullets.iterator();
                 while (it_bullets.hasNext()) {
                     Bullet bullet = it_bullets.next();
                     bullet.updateCenterX();
@@ -200,6 +217,17 @@ public class GamePanel extends JPanel implements Runnable {
                 }
             }
         }
+
+        Iterator<Enemy> it_enemies = EnemyM.enemies.iterator();
+        while (it_enemies.hasNext()) {
+            Enemy enemy = it_enemies.next();
+            enemy.updateCenterX();
+            enemy.updateCenterY();
+            enemy.calculateRotation();
+
+        }
+
+
     }
 
     @Override
@@ -208,7 +236,8 @@ public class GamePanel extends JPanel implements Runnable {
             //1. update() updates the information
             try {
                 update();
-            } catch (UnsupportedAudioFileException | LineUnavailableException | IOException e) {
+            } catch (UnsupportedAudioFileException | LineUnavailableException | IOException |
+                     ConcurrentModificationException e) {
                 throw new RuntimeException(e);
             }
             //2. repaint() built in java method to re-invoke paint() method

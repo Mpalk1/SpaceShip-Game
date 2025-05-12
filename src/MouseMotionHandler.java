@@ -1,5 +1,4 @@
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
 public class MouseMotionHandler implements MouseMotionListener{
@@ -20,7 +19,6 @@ public class MouseMotionHandler implements MouseMotionListener{
         pos_y = e.getY();
 //        System.out.println("Mouse position -> x: " + e.getX() + ", y:" + e.getY());
     }
-
 
 
 }
