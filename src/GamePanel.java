@@ -8,11 +8,11 @@ import javax.sound.sampled.*;
 
 public class GamePanel extends JPanel implements Runnable {
 
-    // TODO: enemies walking towards player, enemies shooting at player - , colliding with enemies
+    // TODO: enemies walking towards player, enemies shooting at player - colliding with enemies, make objects updatable
 
     private Thread GameThread;
-    public static final int SCREEN_WIDTH = 1600;
-    public static final int SCREEN_HEIGHT = 1000;
+    public static final int SCREEN_WIDTH = 1400;
+    public static final int SCREEN_HEIGHT = 800;
 
     public long StartTime = System.currentTimeMillis();
     long enemy_cooldown = System.currentTimeMillis();
@@ -178,17 +178,13 @@ public class GamePanel extends JPanel implements Runnable {
                 Iterator<Bullet> it_bullets = player_bullets.iterator();
                 while (it_bullets.hasNext()) {
                     Bullet bullet = it_bullets.next();
-                    bullet.updateCenterX();
-                    bullet.updateCenterY();
+                    bullet.update();
                     if (bullet.shouldRemove()) {
                         it_bullets.remove();
                         System.out.println("bullet removed");
                     }
 
                     //Shooting
-                    bullet.pos_x += Math.cos(bullet.rotation - Math.PI / 2) * bullet.speed;
-                    bullet.pos_y += Math.sin(bullet.rotation - Math.PI / 2) * bullet.speed;
-                    bullet.updateHitBox();
 
                     //Checking for hits
                     synchronized (EnemyM.enemies) {

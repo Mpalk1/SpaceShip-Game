@@ -1,7 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 
-public class Bullet {
+public class Bullet implements Updatable{
     ImageIcon icon = new ImageIcon("assets/sprites/player_projectile.png");
     public double pos_x;
     public double pos_y;
@@ -28,6 +28,28 @@ public class Bullet {
         this.hits = 0;
     }
 
+    @Override
+    public void setup() {
+
+    }
+
+    @Override
+    public void update() {
+        updatePosX();
+        updatePosY();
+        updateCenterY();
+        updateCenterY();
+        updateHitBox();
+    }
+
+    public void updatePosX(){
+        this.pos_x += Math.cos(this.rotation - Math.PI / 2) * this.speed;
+    }
+
+    public void updatePosY(){
+        this.pos_y += Math.sin(this.rotation - Math.PI / 2) * this.speed;
+    }
+
     public void updateHitBox(){
         this.HitBox.setLocation((int)this.pos_x, (int)this.pos_y);
     }
@@ -42,6 +64,7 @@ public class Bullet {
     public boolean shouldRemove(){
         return (this.center_y > GamePanel.SCREEN_HEIGHT || this.center_y < 0 || this.center_x < 0 || this.center_x > GamePanel.SCREEN_WIDTH);
     }
+
 
 
 }

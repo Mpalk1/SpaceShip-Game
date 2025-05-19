@@ -1,4 +1,4 @@
-package PACKAGE_NAME;
-
-public class Updatable {
+public interface Updatable {
+    void setup();
+    void update();
 }
