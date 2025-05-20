@@ -1,7 +1,12 @@
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.Random;
 
-public class Enemy {
+public class Enemy implements Updatable{
     public int pos_x;
     public int pos_y;
     public int center_x;
@@ -12,13 +17,12 @@ public class Enemy {
     public Rectangle HurtBox;
     public int HP;
     public double rotation;
-    public double angle_temp_x;
-    public double angle_temp_y;
     public int speed;
     PlayerShip player;
-    public long cooldown;
+    public Random cooldown;
+    GamePanel gp;
 
-    public Enemy(int pos_x, int pos_y, int HP, int speed, long cooldown, PlayerShip player){
+    public Enemy(int pos_x, int pos_y, int HP, int speed, PlayerShip player, GamePanel gp){
         this.pos_x = pos_x;
         this.pos_y = pos_y;
         this.icon = new ImageIcon("assets/sprites/enemy.png");
@@ -29,10 +33,27 @@ public class Enemy {
         this.HP = HP;
         this.speed = speed;
         this.player = player;
-        this.cooldown = cooldown;
+        this.cooldown = new Random();
+        this.cooldown.nextInt(1, 3);
+        this.gp = gp;
+    }
+
+    @Override
+    public void setup() {
+
+    }
+
+    @Override
+    public void update() throws UnsupportedAudioFileException, LineUnavailableException, IOException {
+        calculateRotation();
+        updateCenterX();
+        updateCenterY();
+        updateCollision();
     }
 
     public void calculateRotation(){
+        double angle_temp_x;
+        double angle_temp_y;
         if (center_x < Main.ship.center_x && center_y > Main.ship.center_y) { // 1 cwiartka
             angle_temp_x = Main.ship.center_x - center_x;
             angle_temp_y = center_y - Main.ship.center_y;
@@ -64,5 +85,26 @@ public class Enemy {
         this.center_y = this.pos_y + height/2;
     }
 
+    public void updateCollision() throws UnsupportedAudioFileException, LineUnavailableException, IOException {
+        synchronized (gp.BulletM.playerBullets){
+            Iterator<Bullet> it_bullets = gp.BulletM.playerBullets.iterator();
+            while(it_bullets.hasNext()){
+                Bullet bullet = it_bullets.next();
+                if(bullet.hits == 0) {
+                    if (this.HurtBox.intersects(bullet.HitBox)) {
+                        gp.SoundManager.playEnemyHit();
+                        this.HP -= 25;
+                        bullet.updateHits();
+                    }
+                }
+            }
+        }
+    }
+    public boolean shouldRemove(){
+        return (this.HP <= 0);
+    }
 
+    private void shoot(){
+
+    }
 }

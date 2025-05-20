@@ -8,33 +8,27 @@ import javax.sound.sampled.*;
 
 public class GamePanel extends JPanel implements Runnable {
 
-    // TODO: enemies walking towards player, enemies shooting at player - colliding with enemies, make objects updatable
+    // TODO: enemies walking towards player, enemies shooting at player - colliding with enemies, make objects updatable, make classes extend Jpanel - paintComponent() method
 
     private Thread GameThread;
     public static final int SCREEN_WIDTH = 1400;
     public static final int SCREEN_HEIGHT = 800;
 
-    public long StartTime = System.currentTimeMillis();
-    long enemy_cooldown = System.currentTimeMillis();
     public int FPS = 60;
-    public double angle_temp_x;
-    public double angle_temp_y;
-    public double angle;
-    public double angle_temp;
     double StartTimer;
-    int score_cnt;
+    int score_cnt = 0;
     int time_limit = 60;
 
-    EnemyManager EnemyM = new EnemyManager();
+    EnemyManager EnemyM = new EnemyManager(this);
     KeyHandler KeyH = new KeyHandler();
     MouseMotionHandler MouseMotionH = new MouseMotionHandler();
     MouseClickHandler MouseClickH = new MouseClickHandler();
-    public JLabel debugField1 = new JLabel();
     SoundManager SoundManager = new SoundManager();
-    public final List<Bullet> player_bullets = Collections.synchronizedList(new ArrayList<>());
+    BulletManager BulletM = new BulletManager(this);
+    JLabel debugField1 = new JLabel();
     JLabel score = new JLabel();
     JLabel timer = new JLabel();
-    //JOptionPane game_over_screen = new JOptionPane();
+    JLabel HP = new JLabel();
 
     public GamePanel() {
         super();
@@ -48,6 +42,7 @@ public class GamePanel extends JPanel implements Runnable {
         this.add(debugField1);
         this.add(score);
         this.add(timer);
+        this.add(HP);
     }
 
     @Override
@@ -57,23 +52,32 @@ public class GamePanel extends JPanel implements Runnable {
         AffineTransform startingTransform = g2D.getTransform();
 
         // Drawing player
-        g2D.rotate(angle, Main.ship.center_x, Main.ship.center_y);
+        g2D.rotate(Main.ship.rotation, Main.ship.center_x, Main.ship.center_y);
         g2D.drawImage(Main.ship.shipIcon.getImage(), Main.ship.pos_x, Main.ship.pos_y, Main.ship.width, Main.ship.height, null);
+        g2D.drawRect(Main.ship.pos_x, Main.ship.pos_y, Main.ship.width, Main.ship.height);
         g2D.setTransform(startingTransform);
 
         // Drawing bullets
-        if (!player_bullets.isEmpty()) {
-            for (Bullet bullet : player_bullets) {
-                if (bullet.hits == 0) {
-                    g2D.setTransform(startingTransform);
-                    g2D.rotate(bullet.rotation, bullet.center_x, bullet.center_y);
-                    g2D.drawImage(bullet.icon.getImage(), (int) bullet.pos_x, (int) bullet.pos_y, bullet.width, bullet.height, null);
-                    //g2D.drawRect(bullet.HitBox.x, bullet.HitBox.y, bullet.HitBox.width, bullet.HitBox.height);
-                }
+        if (!BulletM.playerBullets.isEmpty()) {
+            for (Bullet bullet : BulletM.playerBullets) {
+                g2D.setTransform(startingTransform);
+                g2D.rotate(bullet.rotation, bullet.center_x, bullet.center_y);
+                g2D.drawImage(bullet.icon.getImage(), (int) bullet.pos_x, (int) bullet.pos_y, bullet.width, bullet.height, null);
+                //g2D.drawRect(bullet.HitBox.x, bullet.HitBox.y, bullet.HitBox.width, bullet.HitBox.height);
+
             }
         }
         g2D.setTransform(startingTransform);
 
+        if(!BulletM.EnemyBullets.isEmpty()){
+            for (Bullet bullet : BulletM.EnemyBullets) {
+                g2D.setTransform(startingTransform);
+                g2D.rotate(bullet.rotation, bullet.center_x, bullet.center_y);
+                g2D.drawImage(bullet.icon.getImage(), (int) bullet.pos_x, (int) bullet.pos_y, bullet.width, bullet.height, null);
+                //g2D.drawRect(bullet.HitBox.x, bullet.HitBox.y, bullet.HitBox.width, bullet.HitBox.height);
+            }
+        }
+        g2D.setTransform(startingTransform);
         //Drawing enemies
         if (!EnemyM.enemies.isEmpty()) {
             for (Enemy enemy : EnemyM.enemies) {
@@ -96,134 +100,46 @@ public class GamePanel extends JPanel implements Runnable {
     public void setup() {
         System.out.println("setup started");
         JOptionPane.showMessageDialog(null, "Time limit: " + time_limit + "s.\nTry to get the highest score possible.", "rules", JOptionPane.PLAIN_MESSAGE);
-        for (int i = 0; i < 5; i++) {
-            EnemyM.spawnEnemyRandom(100);
-        }
+//        for (int i = 0; i < 5; i++) {
+//            EnemyM.spawnEnemyRandom(100);
+//        }
+        EnemyM.spawnEnemy(200,200,100,3,3, Main.ship);
         score_cnt = 0;
         StartTimer = System.currentTimeMillis();
         debugField1.setBounds(SCREEN_WIDTH / 2 - 250, 10, 1000, 10);
         score.setFont(new Font("Thoma", Font.PLAIN, 20));
         score.setBounds(0, 0, 300, 20);
-        score.setForeground(Color.red);
+        score.setForeground(Color.WHITE);
+        HP.setFont(new Font("Thoma", Font.PLAIN, 20));
+        HP.setBounds(0, 60, 300, 20);
+        HP.setForeground(Color.RED);
         timer.setFont(new Font("Thoma", Font.PLAIN, 20));
         timer.setBounds(0, 30, 300, 20);
         timer.setForeground(Color.BLUE);
+        long t = System.currentTimeMillis();
+        System.out.println(t);
+        System.out.println((int)t);
+
     }
 
-    public void update() throws UnsupportedAudioFileException, LineUnavailableException, IOException {
-        Main.ship.center_x = Main.ship.pos_x + (Main.ship.width / 2);
-        Main.ship.center_y = Main.ship.pos_y + (Main.ship.height / 2);
-
-
+    public synchronized void update() throws UnsupportedAudioFileException, LineUnavailableException, IOException {
         score.setText("SCORE: " + score_cnt);
         timer.setText("TIME: " + (int) (System.currentTimeMillis() - StartTimer) / 1000);
+        HP.setText("HEALTH: " + Main.ship.HP);
         if ((int) (System.currentTimeMillis() - StartTimer) / 1000 >= time_limit) {
             GameThread = null;
             JOptionPane.showMessageDialog(null, "Time limit exceeded.\nYour score: " + score_cnt, "game over", JOptionPane.PLAIN_MESSAGE);
         }
-
-
-        //ship angle calculations
-
-        if (MouseMotionH.pos_x > Main.ship.center_x && MouseMotionH.pos_y < Main.ship.center_y) { // 1 cwiartka
-            angle_temp_x = MouseMotionH.pos_x - Main.ship.center_x;
-            angle_temp_y = Main.ship.center_y - MouseMotionH.pos_y;
-            angle = Math.atan2(angle_temp_x, angle_temp_y);
+        if(!Main.ship.isAlive){
+            GameThread = null;
+            JOptionPane.showMessageDialog(null, "u ded lol", "game over", JOptionPane.PLAIN_MESSAGE);
         }
-        if (MouseMotionH.pos_x > Main.ship.center_x && MouseMotionH.pos_y > Main.ship.center_y) { // 2 cwiartka
-            angle_temp_x = MouseMotionH.pos_x - Main.ship.center_x;
-            angle_temp_y = MouseMotionH.pos_y - Main.ship.center_y;
-            angle = Math.atan2(angle_temp_y, angle_temp_x) + Math.PI / 2;
-        }
-        if (MouseMotionH.pos_x < Main.ship.center_x && MouseMotionH.pos_y > Main.ship.center_y) { // 3 cwiartka
-            angle_temp_x = Main.ship.center_x - MouseMotionH.pos_x;
-            angle_temp_y = MouseMotionH.pos_y - Main.ship.center_y;
-            angle = Math.atan2(angle_temp_x, angle_temp_y) + Math.PI;
-        }
-        if (MouseMotionH.pos_x < Main.ship.center_x && MouseMotionH.pos_y < Main.ship.center_y) { //4 cwiartka
-            angle_temp_x = Main.ship.center_x - MouseMotionH.pos_x;
-            angle_temp_y = Main.ship.center_y - MouseMotionH.pos_y;
-            angle = Math.atan2(angle_temp_y, angle_temp_x) + 3 * Math.PI / 2;
-        }
-
-
-        debugField1.setText("Mouse_x: " + MouseMotionH.pos_x + ", Mouse_y: " + MouseMotionH.pos_y + ", angle: " + Math.toDegrees(angle) + ", ship position: (" + Main.ship.pos_x + ", "
+        debugField1.setText("Mouse_x: " + MouseMotionH.pos_x + ", Mouse_y: " + MouseMotionH.pos_y + ", angle: " + Math.toDegrees(Main.ship.rotation) + ", ship position: (" + Main.ship.pos_x + ", "
                 + Main.ship.pos_y + "), ship center: (" + Main.ship.center_x + ", " + Main.ship.center_y + ")" + "Mouse clicked: " + MouseClickH.mouseClicked);
 
-
-        //input handling
-
-        if (KeyH.leftPressed && Main.ship.pos_x > 0) {
-            Main.ship.pos_x -= Main.ship.speed;
-        }
-        if (KeyH.rightPressed && Main.ship.pos_x < SCREEN_WIDTH - Main.ship.width) {
-            Main.ship.pos_x += Main.ship.speed;
-        }
-        if (KeyH.downPressed && Main.ship.pos_y < SCREEN_HEIGHT - Main.ship.height) {
-            Main.ship.pos_y += Main.ship.speed;
-        }
-        if (KeyH.upPressed && Main.ship.pos_y > 0) {
-            Main.ship.pos_y -= Main.ship.speed;
-        }
-        if (MouseClickH.mouseClicked) {
-            if (System.currentTimeMillis() - StartTime > 200) {
-                StartTime = System.currentTimeMillis();
-                player_bullets.add(new Bullet(Main.ship.center_x - 10, Main.ship.center_y, angle));
-                SoundManager.playShootingSound();
-            }
-
-        }
-        synchronized (player_bullets) {
-            if (!player_bullets.isEmpty()) {
-                Iterator<Bullet> it_bullets = player_bullets.iterator();
-                while (it_bullets.hasNext()) {
-                    Bullet bullet = it_bullets.next();
-                    bullet.update();
-                    if (bullet.shouldRemove()) {
-                        it_bullets.remove();
-                        System.out.println("bullet removed");
-                    }
-
-                    //Shooting
-
-                    //Checking for hits
-                    synchronized (EnemyM.enemies) {
-                        if (bullet.hits == 0) {
-                            Iterator<Enemy> it_enemies = EnemyM.enemies.iterator();
-                            while (it_enemies.hasNext()) {
-                                Enemy enemy = it_enemies.next();
-                                if (enemy.HurtBox.intersects(bullet.HitBox)) {
-                                    enemy.HP -= 25;
-                                    SoundManager.playEnemyHit();
-                                    System.out.println("enemy hit");
-                                    bullet.hits += 1;
-                                }
-                                if (enemy.HP <= 0) {
-                                    it_enemies.remove();
-                                    score_cnt += 25;
-                                }
-                            }
-                        }
-                        if (EnemyM.enemies.isEmpty()) {
-                            for (int i = 0; i < 5; i++) {
-                                EnemyM.spawnEnemyRandom(100);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        Iterator<Enemy> it_enemies = EnemyM.enemies.iterator();
-        while (it_enemies.hasNext()) {
-            Enemy enemy = it_enemies.next();
-            enemy.updateCenterX();
-            enemy.updateCenterY();
-            enemy.calculateRotation();
-
-        }
-
-
+        Main.ship.update();
+        BulletM.update();
+        EnemyM.update();
     }
 
     @Override

@@ -3,7 +3,7 @@ import javax.swing.*;
 
 public class Main {
 
-    public static PlayerShip ship = new PlayerShip();
+    public static PlayerShip ship;
 
 
     public static void main(String[] args) {
@@ -14,7 +14,7 @@ public class Main {
         window.setLocationRelativeTo(null);
         //window.setLayout(null);
         GamePanel gamePanel = new GamePanel();
-
+        ship = new PlayerShip(gamePanel);
 
         window.add(gamePanel);
         window.pack();
