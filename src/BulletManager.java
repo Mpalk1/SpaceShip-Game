@@ -62,10 +62,13 @@ public class BulletManager implements Updatable {
     }
 
     public void spawnEnemyBullet() {
-        if ((int) System.currentTimeMillis() / 1000 - enemy_cooldown >= enemy_startTime) {
-            enemy_startTime = (int) System.currentTimeMillis() / 1000;
-            for (Enemy enemy : gp.EnemyM.enemies) {
-                EnemyBullets.add(new Bullet(enemy.center_x, enemy.center_y, enemy.rotation, gp, Bullet.enemy_bullet));
+        synchronized (gp.EnemyM.enemies){
+            for(Enemy enemy: gp.EnemyM.enemies){
+                System.out.println("enemy cooldown: " + enemy.cooldown);
+                if(System.currentTimeMillis()/1000.0 - enemy.cooldown >= enemy.start_time){
+                    enemy.start_time = System.currentTimeMillis() / 1000.0;
+                    EnemyBullets.add(new Bullet(enemy.center_x, enemy.center_y, enemy.rotation, gp, Bullet.enemy_bullet));
+                }
             }
         }
     }

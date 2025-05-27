@@ -15,7 +15,7 @@ public class PlayerShip extends JPanel implements Updatable {
     int center_x;
     int center_y;
     double rotation;
-    int HP = 100;
+    int HP = 1000000;
     Rectangle HitBox = new Rectangle(pos_x, pos_y, width, height);
     private final GamePanel gp;
     boolean isAlive;
@@ -119,6 +119,13 @@ public class PlayerShip extends JPanel implements Updatable {
             if (this.HitBox.intersects(bullet.HitBox)) {
                 bullet.updateHits();
                 HP -= 25;
+            }
+        }
+        Iterator<Enemy> it_enemy = gp.EnemyM.enemies.iterator();
+        while(it_enemy.hasNext()){
+            Enemy enemy = it_enemy.next();
+            if(this.HitBox.intersects(enemy.HurtBox)){
+                this.HP -= 25;
             }
         }
 

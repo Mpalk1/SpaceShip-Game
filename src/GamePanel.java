@@ -8,7 +8,7 @@ import javax.sound.sampled.*;
 
 public class GamePanel extends JPanel implements Runnable {
 
-    // TODO: enemies walking towards player, enemies shooting at player - colliding with enemies, make objects updatable, make classes extend Jpanel - paintComponent() method
+    // TODO: enemies walking towards player, colliding with enemies
 
     private Thread GameThread;
     public static final int SCREEN_WIDTH = 1400;
@@ -54,7 +54,7 @@ public class GamePanel extends JPanel implements Runnable {
         // Drawing player
         g2D.rotate(Main.ship.rotation, Main.ship.center_x, Main.ship.center_y);
         g2D.drawImage(Main.ship.shipIcon.getImage(), Main.ship.pos_x, Main.ship.pos_y, Main.ship.width, Main.ship.height, null);
-        g2D.drawRect(Main.ship.pos_x, Main.ship.pos_y, Main.ship.width, Main.ship.height);
+//        g2D.drawRect(Main.ship.pos_x, Main.ship.pos_y, Main.ship.width, Main.ship.height);
         g2D.setTransform(startingTransform);
 
         // Drawing bullets

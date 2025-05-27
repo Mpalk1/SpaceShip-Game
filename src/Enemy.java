@@ -19,8 +19,10 @@ public class Enemy implements Updatable{
     public double rotation;
     public int speed;
     PlayerShip player;
-    public Random cooldown;
+    public Random randomizer;
+    public double cooldown;
     GamePanel gp;
+    double start_time;
 
     public Enemy(int pos_x, int pos_y, int HP, int speed, PlayerShip player, GamePanel gp){
         this.pos_x = pos_x;
@@ -33,9 +35,10 @@ public class Enemy implements Updatable{
         this.HP = HP;
         this.speed = speed;
         this.player = player;
-        this.cooldown = new Random();
-        this.cooldown.nextInt(1, 3);
+        this.randomizer = new Random();
+        this.cooldown = randomizer.nextDouble(0.7, 3.5);
         this.gp = gp;
+        this.start_time = System.currentTimeMillis()/1000.0;
     }
 
     @Override
