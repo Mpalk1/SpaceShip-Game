@@ -103,7 +103,7 @@ public class GamePanel extends JPanel implements Runnable {
 //        for (int i = 0; i < 5; i++) {
 //            EnemyM.spawnEnemyRandom(100);
 //        }
-        EnemyM.spawnEnemy(200,200,100,3,3, Main.ship);
+        EnemyM.spawnEnemy(SCREEN_WIDTH/2,SCREEN_HEIGHT/2,100,3,3, Main.ship);
         score_cnt = 0;
         StartTimer = System.currentTimeMillis();
         debugField1.setBounds(SCREEN_WIDTH / 2 - 250, 10, 1000, 10);

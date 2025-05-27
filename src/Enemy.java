@@ -104,7 +104,4 @@ public class Enemy implements Updatable{
         return (this.HP <= 0);
     }
 
-    private void shoot(){
-
-    }
 }

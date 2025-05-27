@@ -44,9 +44,14 @@ public class PlayerShip extends JPanel implements Updatable {
         updateCenterX();
         updateCenterY();
         updateRotation();
+        updateHitBox();
         updateShoot();
         updateHit();
         isAlive();
+    }
+
+    private void updateHitBox(){
+        this.HitBox.setLocation(this.pos_x, this.pos_y);
     }
 
     private void updatePosX() {

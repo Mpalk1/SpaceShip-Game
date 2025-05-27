@@ -19,6 +19,7 @@ public class BulletManager implements Updatable {
     public BulletManager(GamePanel gp) {
         this.gp = gp;
     }
+
     @Override
     public void setup() {
 
@@ -53,7 +54,7 @@ public class BulletManager implements Updatable {
     }
 
     public void spawnPlayerBullet() throws UnsupportedAudioFileException, LineUnavailableException, IOException {
-        if (System.currentTimeMillis() - cooldown >= startTime ) {
+        if (System.currentTimeMillis() - cooldown >= startTime) {
             startTime = System.currentTimeMillis();
             playerBullets.add(new Bullet(Main.ship.center_x - 10, Main.ship.center_y, Main.ship.rotation, gp, Bullet.player_bullet));
             gp.SoundManager.playShootingSound();
@@ -61,7 +62,7 @@ public class BulletManager implements Updatable {
     }
 
     public void spawnEnemyBullet() {
-        if ((int) System.currentTimeMillis() / 1000 - enemy_cooldown >= enemy_startTime ) {
+        if ((int) System.currentTimeMillis() / 1000 - enemy_cooldown >= enemy_startTime) {
             enemy_startTime = (int) System.currentTimeMillis() / 1000;
             for (Enemy enemy : gp.EnemyM.enemies) {
                 EnemyBullets.add(new Bullet(enemy.center_x, enemy.center_y, enemy.rotation, gp, Bullet.enemy_bullet));
