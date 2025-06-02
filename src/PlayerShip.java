@@ -3,6 +3,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Iterator;
 
 public class PlayerShip extends JPanel implements Updatable {
@@ -19,10 +20,16 @@ public class PlayerShip extends JPanel implements Updatable {
     Rectangle HitBox = new Rectangle(pos_x, pos_y, width, height);
     private final GamePanel gp;
     boolean isAlive;
+    String selectedGun = "default";
+    HashMap<String, Integer> cooldowns = new HashMap<>();
 
     public PlayerShip(GamePanel Gamepanel) {
         this.gp = Gamepanel;
         isAlive = true;
+        cooldowns.put("default", 350);
+        cooldowns.put("rifle", 150);
+        cooldowns.put("shotgun", 500);
+        cooldowns.put("sniper", 1500);
     }
 
 //    @Override
@@ -44,6 +51,7 @@ public class PlayerShip extends JPanel implements Updatable {
         updateCenterX();
         updateCenterY();
         updateRotation();
+        updateGun();
         updateHitBox();
         updateShoot();
         updateHit();
@@ -135,6 +143,10 @@ public class PlayerShip extends JPanel implements Updatable {
         if (this.HP <= 0) {
             this.isAlive = false;
         }
+    }
+
+    private void updateGun(){
+        this.selectedGun = gp.KeyH.selectedGun;
     }
 }
 

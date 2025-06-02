@@ -8,11 +8,11 @@ import javax.sound.sampled.*;
 
 public class GamePanel extends JPanel implements Runnable {
 
-    // TODO: enemies walking towards player, colliding with enemies
+    // TODO: enemies walking towards player, guns - shotgun, rifle, sniper,
 
     private Thread GameThread;
-    public static final int SCREEN_WIDTH = 1400;
-    public static final int SCREEN_HEIGHT = 800;
+    public static final int SCREEN_WIDTH = 1200;
+    public static final int SCREEN_HEIGHT = 600;
 
     public int FPS = 60;
     double StartTimer;
@@ -116,9 +116,6 @@ public class GamePanel extends JPanel implements Runnable {
         timer.setFont(new Font("Thoma", Font.PLAIN, 20));
         timer.setBounds(0, 30, 300, 20);
         timer.setForeground(Color.BLUE);
-        long t = System.currentTimeMillis();
-        System.out.println(t);
-        System.out.println((int)t);
 
     }
 

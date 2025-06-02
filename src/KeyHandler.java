@@ -8,10 +8,26 @@ public class KeyHandler implements KeyListener {
     public boolean enterPressed;
     public boolean downPressed;
     public boolean upPressed;
+    public String selectedGun = "default";
 
     @Override
     public void keyTyped(KeyEvent e) {
-
+        if(e.getKeyChar() == '1'){
+            selectedGun = "default";
+            System.out.println(selectedGun);
+        }
+        if(e.getKeyChar() == '2'){
+            selectedGun = "rifle";
+            System.out.println(selectedGun);
+        }
+        if(e.getKeyChar() == '3'){
+            selectedGun = "shotgun";
+            System.out.println(selectedGun);
+        }
+        if(e.getKeyChar() == '4'){
+            selectedGun = "sniper";
+            System.out.println(selectedGun);
+        }
     }
 
     @Override
