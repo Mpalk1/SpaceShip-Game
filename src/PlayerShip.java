@@ -27,8 +27,8 @@ public class PlayerShip extends JPanel implements Updatable {
         this.gp = Gamepanel;
         isAlive = true;
         cooldowns.put("default", 350);
-        cooldowns.put("rifle", 150);
-        cooldowns.put("shotgun", 500);
+        cooldowns.put("rifle", 200);
+        cooldowns.put("shotgun", 650);
         cooldowns.put("sniper", 1500);
     }
 

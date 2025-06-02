@@ -17,7 +17,7 @@ public class GamePanel extends JPanel implements Runnable {
     public int FPS = 60;
     double StartTimer;
     int score_cnt = 0;
-    int time_limit = 60;
+    int time_limit = 1000;
 
     EnemyManager EnemyM = new EnemyManager(this);
     KeyHandler KeyH = new KeyHandler();
@@ -29,8 +29,9 @@ public class GamePanel extends JPanel implements Runnable {
     JLabel score = new JLabel();
     JLabel timer = new JLabel();
     JLabel HP = new JLabel();
+    JLabel selectedGun = new JLabel();
 
-    public GamePanel() {
+    public GamePanel() throws IOException {
         super();
         this.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
         this.addKeyListener(KeyH);
@@ -43,6 +44,7 @@ public class GamePanel extends JPanel implements Runnable {
         this.add(score);
         this.add(timer);
         this.add(HP);
+        this.add(selectedGun);
     }
 
     @Override
@@ -116,6 +118,10 @@ public class GamePanel extends JPanel implements Runnable {
         timer.setFont(new Font("Thoma", Font.PLAIN, 20));
         timer.setBounds(0, 30, 300, 20);
         timer.setForeground(Color.BLUE);
+        selectedGun.setFont(new Font("Thoma", Font.PLAIN, 20));
+        selectedGun.setBounds(0, 90, 300, 20);
+        selectedGun.setForeground(Color.DARK_GRAY);
+
 
     }
 
@@ -123,6 +129,7 @@ public class GamePanel extends JPanel implements Runnable {
         score.setText("SCORE: " + score_cnt);
         timer.setText("TIME: " + (int) (System.currentTimeMillis() - StartTimer) / 1000);
         HP.setText("HEALTH: " + Main.ship.HP);
+        selectedGun.setText("GUN(1-4 to switch): " + Main.ship.selectedGun);
         if ((int) (System.currentTimeMillis() - StartTimer) / 1000 >= time_limit) {
             GameThread = null;
             JOptionPane.showMessageDialog(null, "Time limit exceeded.\nYour score: " + score_cnt, "game over", JOptionPane.PLAIN_MESSAGE);

@@ -63,32 +63,32 @@ public class BulletManager implements Updatable {
             case "default":
                 if (System.currentTimeMillis() - Main.ship.cooldowns.get("default") >= startTime) {
                     startTime = System.currentTimeMillis();
-                    playerBullets.add(new Bullet(Main.ship.center_x - 10, Main.ship.center_y, Main.ship.rotation, gp, Bullet.player_bullet, 25));
+                    playerBullets.add(new Bullet(Main.ship.center_x - 10, Main.ship.center_y, Main.ship.rotation, gp, Bullet.player_bullet, 25, 13));
                     gp.SoundManager.playShootingSound();
                 }
                 break;
             case "rifle":
                 if (System.currentTimeMillis() - Main.ship.cooldowns.get("rifle") >= startTime) {
                     startTime = System.currentTimeMillis();
-                    playerBullets.add(new Bullet(Main.ship.center_x - 10, Main.ship.center_y, Main.ship.rotation, gp, Bullet.player_bullet, 40));
+                    playerBullets.add(new Bullet(Main.ship.center_x - 10, Main.ship.center_y, Main.ship.rotation, gp, Bullet.player_bullet, 40, 16));
                     gp.SoundManager.playShootingSound();
                 }
                 break;
             case "shotgun":
                 if (System.currentTimeMillis() - Main.ship.cooldowns.get("shotgun") >= startTime) {
                     startTime = System.currentTimeMillis();
-                    playerBullets.add(new Bullet(Main.ship.center_x - 10, Main.ship.center_y, Main.ship.rotation, gp, Bullet.player_bullet, 20));
-                    playerBullets.add(new Bullet(Main.ship.center_x - 10, Main.ship.center_y, Main.ship.rotation + Math.PI/40, gp, Bullet.player_bullet, 20));
-                    playerBullets.add(new Bullet(Main.ship.center_x - 10, Main.ship.center_y, Main.ship.rotation + Math.PI/20, gp, Bullet.player_bullet, 20));
-                    playerBullets.add(new Bullet(Main.ship.center_x - 10, Main.ship.center_y, Main.ship.rotation - Math.PI/40, gp, Bullet.player_bullet,20));
-                    playerBullets.add(new Bullet(Main.ship.center_x - 10, Main.ship.center_y, Main.ship.rotation - Math.PI/20, gp, Bullet.player_bullet,20));
+                    playerBullets.add(new Bullet(Main.ship.center_x - 10, Main.ship.center_y, Main.ship.rotation, gp, Bullet.player_bullet, 20, 10));
+                    playerBullets.add(new Bullet(Main.ship.center_x - 10, Main.ship.center_y, Main.ship.rotation + Math.PI/40, gp, Bullet.player_bullet, 20, 10));
+                    playerBullets.add(new Bullet(Main.ship.center_x - 10, Main.ship.center_y, Main.ship.rotation + Math.PI/20, gp, Bullet.player_bullet, 20, 10));
+                    playerBullets.add(new Bullet(Main.ship.center_x - 10, Main.ship.center_y, Main.ship.rotation - Math.PI/40, gp, Bullet.player_bullet,20, 10));
+                    playerBullets.add(new Bullet(Main.ship.center_x - 10, Main.ship.center_y, Main.ship.rotation - Math.PI/20, gp, Bullet.player_bullet,20, 10));
                     gp.SoundManager.playShootingSound();
                 }
                 break;
             case "sniper":
                 if (System.currentTimeMillis() - Main.ship.cooldowns.get("sniper") >= startTime) {
                     startTime = System.currentTimeMillis();
-                    playerBullets.add(new Bullet(Main.ship.center_x - 10, Main.ship.center_y, Main.ship.rotation, gp, Bullet.player_bullet, 100));
+                    playerBullets.add(new Bullet(Main.ship.center_x - 10, Main.ship.center_y, Main.ship.rotation, gp, Bullet.player_bullet, 100, 25));
                     gp.SoundManager.playShootingSound();
                 }
                 break;
@@ -100,7 +100,7 @@ public class BulletManager implements Updatable {
             for(Enemy enemy: gp.EnemyM.enemies){
                 if(System.currentTimeMillis()/1000.0 - enemy.cooldown >= enemy.start_time){
                     enemy.start_time = System.currentTimeMillis() / 1000.0;
-                    EnemyBullets.add(new Bullet(enemy.center_x, enemy.center_y, enemy.rotation, gp, Bullet.enemy_bullet, 25));
+                    EnemyBullets.add(new Bullet(enemy.center_x, enemy.center_y, enemy.rotation, gp, Bullet.enemy_bullet, 25, 10));
                 }
             }
         }
