@@ -18,9 +18,10 @@ public class Bullet implements Updatable {
     public Rectangle HitBox;
     public int hits;
     GamePanel gp;
+    public int damage;
 
 
-    public Bullet(int pos_x, int pos_y, double rotation, GamePanel gp, File icon) {
+    public Bullet(int pos_x, int pos_y, double rotation, GamePanel gp, File icon, int dmg) {
         this.pos_x = pos_x;
         this.pos_y = pos_y;
         this.rotation = rotation;
@@ -30,6 +31,7 @@ public class Bullet implements Updatable {
         this.hits = 0;
         this.gp = gp;
         this.icon = new ImageIcon(String.valueOf(icon));
+        this.damage = dmg;
     }
 
     @Override

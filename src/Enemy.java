@@ -96,7 +96,7 @@ public class Enemy implements Updatable{
                 if(bullet.hits == 0) {
                     if (this.HurtBox.intersects(bullet.HitBox)) {
                         gp.SoundManager.playEnemyHit();
-                        this.HP -= 25;
+                        this.HP -= bullet.damage;
                         bullet.updateHits();
                     }
                 }

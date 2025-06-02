@@ -1,4 +1,7 @@
 import javax.swing.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Stack;
 
 
 public class Main {
@@ -15,10 +18,11 @@ public class Main {
         //window.setLayout(null);
         GamePanel gamePanel = new GamePanel();
         ship = new PlayerShip(gamePanel);
-
+        List<Object> gowno = Collections.synchronizedList(new Stack<>());
         window.add(gamePanel);
         window.pack();
         gamePanel.startGameThread();
         window.setVisible(true);
+        System.out.println(ship.hashCode());
     }
 }
