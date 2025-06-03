@@ -8,11 +8,10 @@ import javax.sound.sampled.*;
 
 public class GamePanel extends JPanel implements Runnable {
 
-    // TODO: enemies walking towards player, guns - shotgun, rifle, sniper,
 
     private Thread GameThread;
-    public static final int SCREEN_WIDTH = 1200;
-    public static final int SCREEN_HEIGHT = 600;
+    public static final int SCREEN_WIDTH = 1300;
+    public static final int SCREEN_HEIGHT = 1000;
 
     public int FPS = 60;
     double StartTimer;
@@ -30,6 +29,8 @@ public class GamePanel extends JPanel implements Runnable {
     JLabel timer = new JLabel();
     JLabel HP = new JLabel();
     JLabel selectedGun = new JLabel();
+    ImageIcon backGroundImage = new ImageIcon("assets/sprites/Starfield_02-1024x1024.png");
+    JLabel backGroundLabel = new JLabel(backGroundImage);
 
     public GamePanel() throws IOException {
         super();
@@ -45,6 +46,7 @@ public class GamePanel extends JPanel implements Runnable {
         this.add(timer);
         this.add(HP);
         this.add(selectedGun);
+        this.add(backGroundLabel);
     }
 
     @Override
@@ -53,6 +55,7 @@ public class GamePanel extends JPanel implements Runnable {
         Graphics2D g2D = (Graphics2D) g;
         AffineTransform startingTransform = g2D.getTransform();
 
+        g2D.drawImage(backGroundImage.getImage(), startingTransform, null);
         // Drawing player
         g2D.rotate(Main.ship.rotation, Main.ship.center_x, Main.ship.center_y);
         g2D.drawImage(Main.ship.shipIcon.getImage(), Main.ship.pos_x, Main.ship.pos_y, Main.ship.width, Main.ship.height, null);
@@ -121,8 +124,7 @@ public class GamePanel extends JPanel implements Runnable {
         selectedGun.setFont(new Font("Thoma", Font.PLAIN, 20));
         selectedGun.setBounds(0, 90, 300, 20);
         selectedGun.setForeground(Color.DARK_GRAY);
-
-
+        //backGroundLabel.setSize(new Dimension(GamePanel.SCREEN_WIDTH, GamePanel.SCREEN_HEIGHT));
     }
 
     public synchronized void update() throws UnsupportedAudioFileException, LineUnavailableException, IOException {

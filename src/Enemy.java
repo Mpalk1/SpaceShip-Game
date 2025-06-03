@@ -2,6 +2,7 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Random;
@@ -49,6 +50,9 @@ public class Enemy implements Updatable{
     @Override
     public void update() throws UnsupportedAudioFileException, LineUnavailableException, IOException {
         calculateRotation();
+        updatePosX();
+        updatePosY();
+        updateHitBox();
         updateCenterX();
         updateCenterY();
         updateCollision();
@@ -78,6 +82,20 @@ public class Enemy implements Updatable{
             angle_temp_y = center_y - Main.ship.center_y;
             this.rotation = Math.atan2(angle_temp_y, angle_temp_x) + 3 * Math.PI / 2;
         }
+    }
+    private void updatePosX(){
+        if(Point2D.distance(this.center_x, this.center_y, Main.ship.center_x, Main.ship.center_y) >= 200){
+            this.pos_x += (int) (Math.cos(this.rotation - Math.PI / 2) * this.speed);
+        }
+    }
+    private void updatePosY(){
+        if(Point2D.distance(this.center_x, this.center_y, Main.ship.center_x, Main.ship.center_y) >= 200){
+            this.pos_y += (int) (Math.sin(this.rotation - Math.PI / 2) * this.speed);
+        }
+    }
+
+    private void updateHitBox(){
+        this.HurtBox.setLocation(this.pos_x, this.pos_y);
     }
 
     public void updateCenterX(){

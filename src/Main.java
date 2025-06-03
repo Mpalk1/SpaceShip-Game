@@ -16,7 +16,6 @@ public class Main {
         window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         window.setResizable(false);
         window.setLocationRelativeTo(null);
-        //window.setLayout(null);
         GamePanel gamePanel = new GamePanel();
         ship = new PlayerShip(gamePanel);
         window.add(gamePanel);
